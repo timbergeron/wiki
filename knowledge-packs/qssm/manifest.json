@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "id": "qssm",
+  "name": "QSS-M Expert",
+  "version": "1.0.0",
+  "description": "Current QSS-M engine source, the console command and variable catalog, project documentation, and commit history.",
+  "activation": {
+    "mode": "auto",
+    "keywords": [
+      "qss-m",
+      "qssm",
+      "quakespasm",
+      "quakespasm-spiked",
+      "quakespasm spiked"
+    ],
+    "symbols": ["playdemo", "timedemo"],
+    "stopSymbols": ["name", "color", "version", "status", "edit", "wait", "echo"]
+  },
+  "retrieval": {
+    "maxResults": 8,
+    "maxCharacters": 12000,
+    "maxPerDocument": 2,
+    "minScore": 0.2,
+    "exactSymbolsFirst": true
+  },
+  "sources": [
+    {
+      "id": "engine",
+      "type": "git-worktree",
+      "label": "QSS-M engine source",
+      "kind": "source",
+      "authority": 1,
+      "mount": "qssm",
+      "path": ".",
+      "ref": "HEAD",
+      "extractor": "c-source",
+      "urlTemplate": "https://github.com/timbergeron/QSS-M/blob/{revision}/{path}#L{startLine}",
+      "include": [
+        "Quake/**/*.{c,h,m}"
+      ],
+      "exclude": [
+        "Quake/chat_autocomplete_words.inc",
+        "Quake/jsmn.h",
+        "Quake/lodepng.c",
+        "Quake/lodepng.h",
+        "Quake/stb_image.h",
+        "Quake/stb_image_write.h",
+        "Misc/**",
+        "Windows/**",
+        "macOS/SDL2.framework/**",
+        "watchOS/**"
+      ]
+    },
+    {
+      "id": "docs",
+      "type": "git-worktree",
+      "label": "QSS-M documentation",
+      "kind": "doc",
+      "authority": 0.8,
+      "mount": "qssm",
+      "path": ".",
+      "ref": "HEAD",
+      "extractor": "auto",
+      "urlTemplate": "https://github.com/timbergeron/QSS-M/blob/{revision}/{path}",
+      "include": [
+        "README.md",
+        "BUILDING.html",
+        "Quakespasm.html",
+        "Quakespasm.txt",
+        "Quakespasm-Spiked.txt",
+        "Quakespasm-Music.txt",
+        "macOS/**/*.md",
+        "Misc/csqcharness/README.md"
+      ],
+      "exclude": [
+        "Quake/gamecontrollerdb.txt",
+        "Misc/chat_autocomplete/**",
+        "Windows/**",
+        "macOS/SDL2.framework/**"
+      ]
+    },
+    {
+      "id": "commands",
+      "type": "csv",
+      "label": "Commands and variables sheet",
+      "kind": "catalog",
+      "authority": 0.75,
+      "extractor": "command-catalog",
+      "url": "https://docs.google.com/spreadsheets/d/1ubOuromaXpZonfL-eJ-KA7q-xSRiBBuSvxahzF-uFOY/gviz/tq?tqx=out:csv&sheet=All",
+      "columns": {
+        "identifier": ["Console Variables", "Command / Variable", "Name"],
+        "engine": ["Engine"],
+        "category": ["Category"],
+        "type": ["Type"],
+        "description": ["Description"],
+        "summary": ["Short JSON Description"]
+      }
+    },
+    {
+      "id": "history",
+      "type": "git-history",
+      "label": "QSS-M commit history",
+      "kind": "commit",
+      "authority": 0.6,
+      "mount": "qssm",
+      "path": ".",
+      "ref": "HEAD",
+      "maxCommits": 3000,
+      "urlTemplate": "https://github.com/timbergeron/QSS-M/commit/{revision}"
+    }
+  ],
+  "answerPolicy": {
+    "sourceOrder": ["engine", "commands", "docs", "history"],
+    "mentionSymbolOrigin": true,
+    "mentionDefaults": true
+  },
+  "evaluationsFile": "evaluations.json"
+}

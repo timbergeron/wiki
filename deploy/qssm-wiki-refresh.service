@@ -1,0 +1,10 @@
+[Unit]
+Description=Pull QSS-M and rebuild the QSS-M Guide
+
+[Service]
+Type=oneshot
+User=woods
+Group=woods
+WorkingDirectory=/home/woods/codedev/qssm-wiki
+EnvironmentFile=/home/woods/codedev/qssm-wiki/.env
+ExecStart=/home/woods/codedev/qssm-wiki/deploy/refresh.sh

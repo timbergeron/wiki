@@ -1,0 +1,23 @@
+[Unit]
+Description=QSS-M Guide (static site and live Ask endpoint)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=woods
+Group=woods
+WorkingDirectory=/home/woods/codedev/qssm-wiki
+EnvironmentFile=/home/woods/codedev/qssm-wiki/.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node src/server.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/home/woods/codedev/qssm-wiki/data /home/woods/codedev/qssm-wiki/site/data
+
+[Install]
+WantedBy=multi-user.target

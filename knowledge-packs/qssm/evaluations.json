@@ -1,0 +1,162 @@
+{
+  "questions": [
+    {
+      "question": "What does r_skywind do?",
+      "expect": { "symbol": "r_skywind" }
+    },
+    {
+      "question": "What is the default value of r_fastsky?",
+      "expect": { "locator": "Quake/gl_sky.c", "symbol": "r_fastsky" }
+    },
+    {
+      "question": "What does allow_download_sky control?",
+      "expect": { "symbol": "allow_download_sky" }
+    },
+    {
+      "question": "What is scr_conalpha for?",
+      "expect": { "symbol": "scr_conalpha" }
+    },
+    {
+      "question": "What does host_maxfps default to?",
+      "expect": { "symbol": "host_maxfps" }
+    },
+    {
+      "question": "What does gl_texturemode accept?",
+      "expect": { "symbol": "gl_texturemode" }
+    },
+    {
+      "question": "Which QSS-M cvar enables external music tracks?",
+      "expect": { "symbol": "bgm_extmusic" }
+    },
+    {
+      "question": "What does cl_demoreel_playback_controls do?",
+      "expect": { "symbol": "cl_demoreel_playback_controls" }
+    },
+    {
+      "question": "Is cl_maxpitch specific to QSS-M or inherited from an older engine?",
+      "expect": [
+        { "symbol": "cl_maxpitch" },
+        { "kind": "catalog", "text": "fitzquake" }
+      ]
+    },
+    {
+      "question": "Is r_skywind a QSS-M feature or does it come from Quakespasm?",
+      "expect": [
+        { "symbol": "r_skywind" },
+        { "kind": "catalog", "text": "qss-m" }
+      ]
+    },
+    {
+      "question": "What does the playdemo command do?",
+      "expect": { "symbol": "playdemo" }
+    },
+    {
+      "question": "How does the record command work in QSS-M?",
+      "expect": { "locator": "Quake/cl_demo.c" }
+    },
+    {
+      "question": "What does the timedemo console command measure?",
+      "expect": { "symbol": "timedemo" }
+    },
+    {
+      "question": "What does the skywind_save command write?",
+      "expect": { "symbol": "skywind_save" }
+    },
+    {
+      "question": "Which file handles demo playback in QSS-M?",
+      "expect": { "locator": "Quake/cl_demo.c" }
+    },
+    {
+      "question": "Where is the skybox rendering code in QSS-M?",
+      "expect": { "locator": "Quake/gl_sky.c" }
+    },
+    {
+      "question": "Which QSS-M file contains the background music playback code?",
+      "expect": { "locator": "Quake/bgmusic.c" }
+    },
+    {
+      "question": "Where does QSS-M handle SDL input events?",
+      "expect": { "locator": "Quake/in_sdl.c" }
+    },
+    {
+      "question": "Which source file implements the sound mixing in QSS-M?",
+      "expect": { "locator": "Quake/snd_" }
+    },
+    {
+      "question": "Where is the QSS-M console command buffer implemented?",
+      "expect": { "locator": "Quake/cmd" }
+    },
+    {
+      "question": "How does QSS-M implement cvar registration?",
+      "expect": { "locator": "Quake/cvar.c" }
+    },
+    {
+      "question": "How does QSS-M handle dzip demo compression?",
+      "expect": { "text": "dzip" }
+    },
+    {
+      "question": "What changed recently in QSS-M demo recording?",
+      "expect": { "kind": "commit", "text": "demo" }
+    },
+    {
+      "question": "Which commits touched gl_sky.c?",
+      "expect": { "kind": "commit", "text": "gl_sky.c" }
+    },
+    {
+      "question": "When was asynchronous QSS-M demo recording added?",
+      "expect": { "kind": "commit", "text": "demo" }
+    },
+    {
+      "question": "How do I build QSS-M on macOS?",
+      "expect": { "kind": "doc" }
+    },
+    {
+      "question": "What does the QSS-M README list as new features?",
+      "expect": { "locator": "README.md" }
+    },
+    {
+      "question": "How is external music organised on disk for Quakespasm?",
+      "expect": { "locator": "Quakespasm-Music.txt" }
+    },
+    {
+      "question": "What does ui_live_preview do?",
+      "expect": { "symbol": "ui_live_preview" }
+    },
+    {
+      "question": "What does menu_demooptions control?",
+      "expect": { "symbol": "menu_demooptions" }
+    },
+    {
+      "question": "What is cl_demo_eyecam?",
+      "expect": { "symbol": "cl_demo_eyecam" }
+    },
+    {
+      "question": "What QSS-M sound cvar sets the mix-ahead time?",
+      "expect": { "symbol": "_snd_mixahead" }
+    },
+    {
+      "question": "What does the QSS-M sky command do?",
+      "expect": { "locator": "Quake/gl_sky.c" },
+      "forbid": { "locator": "stb_image" }
+    },
+    {
+      "question": "Which QSS-M cvar controls chase camera distance?",
+      "expect": { "symbol": "chase_back" }
+    },
+    {
+      "question": "How does QSS-M download missing maps?",
+      "expect": { "locator": "Quake/cl_main.c" }
+    }
+  ],
+  "offTopic": [
+    "What is the capital of France?",
+    "Can you review my Python script?",
+    "What time does the tournament start tonight?",
+    "Can you play music for the party?",
+    "Where can I watch a product demo?",
+    "Who caused the San Francisco earthquake?",
+    "How do I record a Zoom call?",
+    "Please connect me with customer service",
+    "What is the Quake movie about?"
+  ]
+}

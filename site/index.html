@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>QSS-M Guide</title>
+  <meta name="description" content="Answers, console variables, commands, and launch options for the QSS-M Quake engine — generated from the live source code.">
+  <meta name="theme-color" content="#2b2b2b">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script src="config.js"></script>
+  <script type="module" src="app.js?v=2"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="bar" id="bar">
+    <a class="brand" href="#top" aria-label="QSS-M Guide home">
+      <img src="favicon.png" alt="" width="28" height="28">
+      <span>QSS-M <b>Guide</b></span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#faq">FAQ</a>
+      <a href="#console">Console</a>
+      <a href="#launch">Launch options</a>
+      <a href="#changes">What's new</a>
+    </nav>
+    <div class="bar-actions">
+      <button class="kbd-hint" id="jump" type="button" aria-label="Search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <kbd id="jump-key">⌘K</kbd>
+      </button>
+      <a class="download" href="https://qssm.quakeone.com/" target="_blank" rel="noopener">Download</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-art" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="eyebrow" id="version-line">Reading the live QSS-M source…</p>
+        <h1>Ask anything about <span class="nowrap">QSS-M.</span></h1>
+        <p class="lede">Answers written from the engine's own source code — every setting, every command, current as of the latest commit.</p>
+
+        <form class="search" id="search-form" role="search" autocomplete="off">
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="q" type="search" name="q" placeholder="How do I change my crosshair?" aria-label="Search the guide or ask a question" spellcheck="false" maxlength="300">
+          <button type="submit" id="ask-button" class="ask-button">Ask</button>
+        </form>
+
+        <div class="suggestions" id="suggestions" aria-label="Popular questions"></div>
+        <div class="results" id="results" aria-live="polite" hidden></div>
+      </div>
+    </section>
+
+    <section class="answer-wrap" id="answer" hidden aria-live="polite"></section>
+
+    <section class="section" id="faq" aria-labelledby="faq-title">
+      <div class="section-head">
+        <h2 id="faq-title">Frequently asked</h2>
+        <p class="section-sub">Written from the source and re-checked on every commit.</p>
+      </div>
+      <div class="faq-layout">
+        <nav class="faq-toc" id="faq-toc" aria-label="FAQ topics"></nav>
+        <div class="faq-list" id="faq-list"></div>
+      </div>
+    </section>
+
+    <section class="section" id="console" aria-labelledby="console-title">
+      <div class="section-head">
+        <h2 id="console-title">Console reference</h2>
+        <p class="section-sub" id="console-sub">Every variable and command the engine registers.</p>
+      </div>
+      <div class="ref-controls">
+        <div class="segmented" id="kind-filter" role="tablist" aria-label="Show">
+          <button type="button" role="tab" data-kind="all" aria-selected="true">All</button>
+          <button type="button" role="tab" data-kind="cvar" aria-selected="false">Variables</button>
+          <button type="button" role="tab" data-kind="command" aria-selected="false">Commands</button>
+        </div>
+        <label class="filter">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="ref-q" type="search" placeholder="Filter by name or description" aria-label="Filter console reference" spellcheck="false">
+        </label>
+      </div>
+      <div class="chips" id="category-filter" aria-label="Categories"></div>
+      <div class="ref-list" id="ref-list"></div>
+      <button class="more" id="ref-more" type="button" hidden>Show more</button>
+    </section>
+
+    <section class="section" id="launch" aria-labelledby="launch-title">
+      <div class="section-head">
+        <h2 id="launch-title">Launch options</h2>
+        <p class="section-sub">Add these after the executable name, e.g. <code>QSS-M-w64.exe -game ctf</code>.</p>
+      </div>
+      <div class="ref-list" id="launch-list"></div>
+    </section>
+
+    <section class="section" id="changes" aria-labelledby="changes-title">
+      <div class="section-head">
+        <h2 id="changes-title">What's new</h2>
+        <p class="section-sub">The latest commits to QSS-M. This guide rebuilds itself from them.</p>
+      </div>
+      <ol class="timeline" id="timeline"></ol>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p id="foot-source"></p>
+    <p class="foot-fine">Descriptions come from the community commands sheet; defaults and availability come from the source. Generated answers can be wrong — the console is the final word.</p>
+    <p class="foot-links">
+      <a href="https://qssm.quakeone.com/" target="_blank" rel="noopener">qssm.quakeone.com</a>
+      <a href="https://github.com/timbergeron/QSS-M" target="_blank" rel="noopener">QSS-M on GitHub</a>
+      <a href="https://github.com/timbergeron/qssm-wiki" target="_blank" rel="noopener">About this guide</a>
+    </p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
