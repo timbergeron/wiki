@@ -163,12 +163,15 @@ async function main() {
   const [{ cvars, commands, params }, sheet, commit, version, log] = await Promise.all([
     scanSource(),
     loadSheet(),
-    git("log", "-1", "--format=%H|%h|%cI|%s"),
+    git("log", "-1", "--format=%H|%cI|%s"),
     versionString(),
-    git("log", "-40", "--no-merges", "--format=%h|%cI|%s"),
+    git("log", "-40", "--no-merges", "--format=%H|%cI|%s"),
   ]);
 
-  const [sha, shortSha, committedAt, subject] = commit.split("|");
+  // Fixed-length short hashes: git's %h length varies by clone, which would make
+  // every CI refresh look like a change.
+  const [sha, committedAt, subject] = commit.split("|");
+  const shortSha = sha.slice(0, 9);
   const entries = [];
   for (const item of [...cvars.values(), ...commands.values(), ...params.values()]) {
     const notes = sheet.get(item.name.toLowerCase()) || {};
@@ -196,7 +199,7 @@ async function main() {
     entries,
     changes: log.split("\n").filter(Boolean).map((line) => {
       const [hash, date, ...rest] = line.split("|");
-      return { hash, date, subject: rest.join("|"), url: `${REPO}/commit/${hash}` };
+      return { hash: hash.slice(0, 9), date, subject: rest.join("|"), url: `${REPO}/commit/${hash}` };
     }),
   };
 
