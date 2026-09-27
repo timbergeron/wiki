@@ -649,8 +649,8 @@ async function main() {
 
   fetch(`${state.askBase}/api/status`).then((r) => (r.ok ? r.json() : null)).then((status) => {
     state.ask = Boolean(status?.ask);
-    if (!state.ask) $("#ask-button").textContent = "Search";
-  }).catch(() => { $("#ask-button").textContent = "Search"; });
+    if (state.ask) $("#ask-button").textContent = "Ask";
+  }).catch(() => {});
 }
 
 main();
