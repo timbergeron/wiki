@@ -60,7 +60,7 @@ async function main() {
     maxOutputTokens: 4096,
     retryOutputTokens: 8192,
     requestTimeoutMs: 120_000,
-    publicUrl: "https://github.com/timbergeron/qssm-wiki",
+    publicUrl: "https://github.com/timbergeron/wiki",
     logger: { info() {}, warn: console.warn, error: console.error },
   });
 

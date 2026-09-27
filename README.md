@@ -1,5 +1,7 @@
 # QSS-M Guide
 
+Live at **https://qssm.quakeone.com/wiki/**
+
 A living FAQ and console reference for the [QSS-M](https://github.com/timbergeron/QSS-M) Quake engine. Every page is rebuilt from the engine's current source, so the guide stays in sync with QSS-M automatically.
 
 - **Search** across every console variable, command, and launch option, with instant results.
@@ -54,13 +56,13 @@ Questions live in [`faq/questions.json`](faq/questions.json). To add a question,
 One-time setup:
 
 ```bash
-gh secret set OPENROUTER_API_KEY --repo timbergeron/qssm-wiki
+gh secret set OPENROUTER_API_KEY --repo timbergeron/wiki
 ```
 
-To refresh the moment QSS-M changes, add this step to a QSS-M workflow that runs on push. It needs a token with `repo` scope on qssm-wiki, stored as `QSSM_WIKI_TOKEN`:
+To refresh the moment QSS-M changes, add this step to a QSS-M workflow that runs on push. It needs a token with `repo` scope on this repo, stored as `QSSM_WIKI_TOKEN`:
 
 ```yaml
-- run: gh api repos/timbergeron/qssm-wiki/dispatches -f event_type=qssm-updated
+- run: gh api repos/timbergeron/wiki/dispatches -f event_type=qssm-updated
   env:
     GH_TOKEN: ${{ secrets.QSSM_WIKI_TOKEN }}
 ```
