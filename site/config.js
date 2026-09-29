@@ -2,5 +2,5 @@
 // src/server.js (same origin). Set to the server's origin when the static site is
 // hosted elsewhere, e.g. GitHub Pages: "https://timbergeron.com/qssm-wiki".
 window.QSSM_GUIDE = {
-  askEndpoint: "",
+  askEndpoint: "https://timbergeron.com/qssm-wiki",
 };

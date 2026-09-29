@@ -10,6 +10,7 @@ Group=woods
 WorkingDirectory=/home/woods/codedev/qssm-wiki
 EnvironmentFile=/home/woods/codedev/qssm-wiki/.env
 Environment=NODE_ENV=production
+Environment=HOST=127.0.0.1
 ExecStart=/usr/bin/node src/server.js
 Restart=on-failure
 RestartSec=5
@@ -17,7 +18,7 @@ UMask=0077
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ReadWritePaths=/home/woods/codedev/qssm-wiki/data /home/woods/codedev/qssm-wiki/site/data
+ReadWritePaths=/home/woods/codedev/qssm-wiki/data
 
 [Install]
 WantedBy=multi-user.target

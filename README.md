@@ -40,21 +40,28 @@ Set `OPENROUTER_API_KEY` only to enable live Ask. Without a key, the published F
 
 Live Ask needs a server to hold the API key and a source search index. `deploy/` includes a systemd service on port 3012 and nginx configuration. Prepare and deploy the search index and matching reference data when updating the Ask server; configure its knowledge source paths for that host.
 
+The production endpoint is `https://timbergeron.com/qssm-wiki`, hosted on the existing server at `woods@timbergeron.com`. Its environment file is `/home/woods/codedev/qssm-wiki/.env` (mode 600). It uses `deepseek/deepseek-v4.1-flash`, allows browser requests from `https://qssm.quakeone.com`, and listens on loopback behind nginx. Never put its API key in `site/` or Git.
+
+Upload prepared files and the local index from this workspace:
+
 ```bash
-sudo cp deploy/qssm-wiki.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now qssm-wiki
+ssh woods@timbergeron.com 'mkdir -p /home/woods/codedev/qssm-wiki/data/knowledge'
+rsync -az src site deploy scripts test knowledge-packs reference faq package.json README.md AGENTS.md woods@timbergeron.com:/home/woods/codedev/qssm-wiki/
+rsync -az data/knowledge/qssm.sqlite woods@timbergeron.com:/home/woods/codedev/qssm-wiki/data/knowledge/
+ssh -t woods@timbergeron.com 'sudo bash /home/woods/codedev/qssm-wiki/deploy/install.sh'
 ```
 
-If an older installation enabled automatic refreshes, disable its installed timer once:
+The installer requires the server environment file to be configured first. It backs up and validates nginx configuration, installs/restarts the service, and disables an old wiki refresh timer if present. It does not rebuild content. For a later code/data update, upload the files and restart only this service:
 
 ```bash
-sudo systemctl disable --now qssm-wiki-refresh.timer
+ssh -t woods@timbergeron.com 'sudo systemctl restart qssm-wiki'
 ```
 
 The repository no longer ships that timer. `deploy/refresh.sh` remains a manual local helper to pull QSS-M and rebuild the index/reference.
 
 To use Pages as the front door and the server for Ask, set `askEndpoint` in `site/config.js` to the server URL and `ALLOWED_ORIGIN` to the Pages origin. Live Ask has a per-IP rate limit (`ASK_PER_IP_PER_10_MIN`, default 8) and a daily spend ceiling (`ASK_DAILY_BUDGET_USD`, default $1).
+
+`npm test` checks cross-origin API behavior and the source-retrieval regression suite without making any OpenRouter requests. Verify the production `/api/status` endpoint before publishing a changed `askEndpoint`.
 
 ## Layout
 

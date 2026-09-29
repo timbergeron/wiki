@@ -10,6 +10,7 @@
     "extract": "node --env-file-if-exists=.env scripts/extract.js",
     "refresh": "npm run index && npm run extract",
     "check": "node --check src/*.js && node --check src/knowledge/*.js && node --check scripts/*.js && node --check site/app.js",
+    "test": "node --test test/*.test.js && node scripts/knowledge.js test qssm",
     "knowledge": "node --env-file-if-exists=.env scripts/knowledge.js"
   },
   "engines": {

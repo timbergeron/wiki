@@ -1,5 +1,5 @@
 // Serves the static guide and an optional live "Ask" endpoint that answers questions
-// from the same evidence the generated FAQ uses, streamed from OpenRouter.
+// from the locally prepared reference and source index, streamed from OpenRouter.
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
@@ -13,6 +13,7 @@ const siteDir = path.join(root, "site");
 const referencePath = path.join(siteDir, "data", "reference.json");
 
 const config = {
+  host: process.env.HOST?.trim() || "127.0.0.1",
   port: Number(process.env.PORT) || 3012,
   apiKey: process.env.OPENROUTER_API_KEY?.trim() || "",
   model: process.env.OPENROUTER_MODEL?.trim() || "deepseek/deepseek-v4.1-flash",
@@ -72,6 +73,7 @@ function cors(request, response) {
   if (config.allowedOrigin && request.headers.origin === config.allowedOrigin) {
     response.setHeader("Access-Control-Allow-Origin", config.allowedOrigin);
     response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
     response.setHeader("Vary", "Origin");
   }
 }
@@ -197,6 +199,9 @@ const server = createServer(async (request, response) => {
   try {
     cors(request, response);
     const { pathname } = new URL(request.url, "http://local");
+    if (pathname === "/api/ask" && config.allowedOrigin && request.headers.origin && request.headers.origin !== config.allowedOrigin) {
+      return sendJson(response, 403, { error: "This origin cannot request live answers." });
+    }
     if (request.method === "OPTIONS") return response.writeHead(204).end();
     if (pathname === "/api/status") {
       return sendJson(response, 200, { ask: Boolean(config.apiKey), model: config.model });
@@ -214,7 +219,7 @@ const server = createServer(async (request, response) => {
   }
 });
 
-server.listen(config.port, () => {
+server.listen(config.port, config.host, () => {
   console.log(
     `QSS-M Wiki on http://localhost:${config.port} ` +
     `(live answers ${config.apiKey ? `on, ${config.model}` : "off — set OPENROUTER_API_KEY"})`,
