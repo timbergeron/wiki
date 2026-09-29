@@ -2,10 +2,10 @@
  "model": "deepseek/deepseek-v4.1-flash",
  "source": {
   "repo": "https://github.com/timbergeron/QSS-M",
-  "sha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
-  "shortSha": "888ba6591",
-  "committedAt": "2026-09-27T09:12:43-07:00",
-  "subject": "add searchable map titles and catalog monitoring",
+  "sha": "789c1961cfa67d1c46788551eb8cbc0c12f22aab",
+  "shortSha": "789c1961c",
+  "committedAt": "2026-09-28T16:58:42-07:00",
+  "subject": "defer qwatch tokens and skip dedicated servers",
   "version": "1.6.9"
  },
  "answers": [
@@ -13,53 +13,40 @@
    "id": "install",
    "section": "Getting started",
    "question": "Where do my Quake game files go?",
-   "answer": "Put them in the `id1` folder inside your base directory — the folder holding the game executable and all game directories. The filesystem always starts there so the game can find its pak files, and .pak files themselves count as path locations since they contain directory information [1][2].\n\n- Type `path` in the console to see the exact directories in use [1].\n- Use `dir *.pak` (or the same command under `ls`, `which`, or `flocate`) to list files in the game directories; `*` matches any number of characters, `?` a single one [3][4].\n- Mods each get their own directory; load one with `game <modname>` [5].\n- To extract a package, use `unpak <file>` on a pak, pk3, or kpf file [6].\n\nIf your game data sits somewhere else, start the game with `-basedir` pointing at the folder containing the executable and game directories, for example `-basedir c:\\quake` [2].",
+   "answer": "Put them in the `id1` folder inside your Quake base directory. The base directory is the folder holding the engine and all game directories [1], and the game looks for files starting in `id1/` [2].\n\n- To see the exact paths in use, type `path` [2].\n- To point the engine at a different base directory, launch it with `-basedir \"c:\\quake\"` [1].\n- Mods live in their own game directory; load one with `game` (or `gamedir`) [3].\n- To list files, use `dir` with wildcards, e.g. `dir *.pak` [4].\n\n`.pak` files also count as path locations, since they contain directory information [2].",
    "citations": [
-    {
-     "label": "path",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7001"
-    },
     {
      "label": "-basedir",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7013"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L7013"
     },
     {
-     "label": "dir",
+     "label": "path",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7002"
-    },
-    {
-     "label": "flocate",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7005"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L7001"
     },
     {
      "label": "game",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7006"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L7006"
     },
     {
-     "label": "unpak",
+     "label": "dir",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7011"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L7002"
     }
    ],
    "related": [
     "path",
-    "dir",
-    "ls",
-    "which",
-    "flocate",
+    "-basedir",
     "game",
-    "unpak",
-    "-basedir"
+    "gamedir",
+    "dir"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "b4b150bf164f014f",
-   "generatedAt": "2026-09-27T18:24:08.633Z"
+   "sha": "789c1961c",
+   "hash": "96cb5d404bbe954e",
+   "generatedAt": "2026-09-29T01:03:16.743Z"
   },
   {
    "id": "config",
@@ -120,47 +107,37 @@
    "id": "mods",
    "section": "Getting started",
    "question": "How do I run a mod or mission pack?",
-   "answer": "To load a mod, type `game <modname>` in the console — it can be switched on the fly, and `gamedir` does the same thing [1][2]. Alternatively, start the engine with `-game <modname>` to set the game directory at launch [3].\n\nMission packs get their own launch options instead:\n\n- `-hipnotic` for Scourge of Armagon [4]\n- `-rogue` for Dissolution of Eternity [5]\n- `-quoth` for Quoth [6]\n\nOnly one mission pack should be specified at a time [4][7].\n\nIf you're hosting cooperative games, `sv_modvote 1` enables server-side voting: eligible players then use `modvote`, and a majority switches everyone to the selected installed mod (default `0`) [8].",
+   "answer": "To load a mod while playing, type `game <modname>` in the console; `gamedir <modname>` does the same thing [1]. To start directly into a mod, add `-game <modname>` to the launch command [2].\n\nFor mission packs, launch QSS-M with one of these command-line options:\n- `-hipnotic` [3]\n- `-rogue` [4]\n- `-quoth` [5]\n\nOnly one mission-pack option should be specified [3][5][4].\n\nIn cooperative games, a server can enable mod voting with `sv_modvote 1` (default `0`); eligible players then use `modvote` to switch to a selected installed mod [6].",
    "citations": [
     {
      "label": "game",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7006"
-    },
-    {
-     "label": "Quake/common.c:6991",
-     "kind": "source",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba659/Quake/common.c#L6991"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L7006"
     },
     {
      "label": "-game",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L7080"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L7080"
     },
     {
      "label": "-hipnotic",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L2357"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L2357"
     },
     {
      "label": "-rogue",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L2351"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L2351"
     },
     {
      "label": "-quoth",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/common.c#L2357"
-    },
-    {
-     "label": "Quake/common.c:7065",
-     "kind": "source",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba659/Quake/common.c#L7065"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/common.c#L2357"
     },
     {
      "label": "sv_modvote",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L55"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L55"
     }
    ],
    "related": [
@@ -174,54 +151,54 @@
     "modvote"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "9b9f12c89b94cb6c",
-   "generatedAt": "2026-09-27T18:24:27.318Z"
+   "sha": "789c1961c",
+   "hash": "3daf02a34df1bba7",
+   "generatedAt": "2026-09-29T01:03:28.506Z"
   },
   {
    "id": "maps",
    "section": "Getting started",
    "question": "How do I download and play custom maps?",
-   "answer": "Put custom map files in the `id1/maps/` folder, then load them with `map <name>` [1]. On a server, `changelevel` is the recommended way to switch maps, since `map` disconnects everyone first [1].\n\nTo fetch a map you don't have, use `download` — for example, `download aerowalk.bsp` [2]. It pulls the file over the web rather than from the server, which is much faster [3]. Two URLs are used, in order:\n\n- `cl_web_download_url`, default `q1tools/q1tools.github.io` [3]\n- `cl_web_download_url2`, default `maps.quakeworld.nu` [4]\n\nLeave either blank to fall back to downloading only from the server you're connected to [3][4].\n\nTo see what you already have, type `maps` for a full list, or `maps chamber` to search by name [5]. Then start one with `map e3m6`.",
+   "answer": "Set your web download URLs, then fetch the map and load it.\n\n- `cl_web_download_url` defaults to `q1tools/q1tools.github.io` and `cl_web_download_url2` defaults to `maps.quakeworld.nu` [1][2]. Web downloads are much faster than pulling files from the server; if both are blank, QSS-M only tries the connected server [1][2].\n- Type `download aerowalk.bsp` to fetch a map. The same command also handles `.lit`, `.wav`, and `.loc` files, and `download ctf` or `download ra` grabs the client files for those mods [3].\n- Then load it with `map aerowalk` [4]. On a server, `map` disconnects all players first, so use `changelevel` instead when changing maps on a game server [4].\n- To find a map, run `maps` for a list with worldspawn descriptions, or `maps chamber` to search all maps [5].\n\nExtra maps can also be placed in `id1/maps/` [4].",
    "citations": [
-    {
-     "label": "map",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13138"
-    },
-    {
-     "label": "download",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13174"
-    },
     {
      "label": "cl_web_download_url",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L108"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L108"
     },
     {
      "label": "cl_web_download_url2",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L109"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L109"
+    },
+    {
+     "label": "download",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13168"
+    },
+    {
+     "label": "map",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13132"
     },
     {
      "label": "maps",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13122"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13116"
     }
    ],
    "related": [
-    "map",
-    "changelevel",
-    "download",
     "cl_web_download_url",
     "cl_web_download_url2",
+    "download",
+    "map",
+    "changelevel",
     "maps"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "cb4ac950d385aa40",
-   "generatedAt": "2026-09-27T18:24:31.336Z"
+   "sha": "789c1961c",
+   "hash": "15e9203611f67677",
+   "generatedAt": "2026-09-29T01:03:29.846Z"
   },
   {
    "id": "reset",
@@ -270,22 +247,22 @@
    "id": "fov",
    "section": "Graphics",
    "question": "How do I change my field of view?",
-   "answer": "Type `fov` followed by a number, for example `fov 110`. The default is 90, and values are clamped between 10 and 170 [1]. Lower values zoom in on distant objects; higher values widen what you see.\n\n- `fov_adapt` (default `1`) automatically scales your FOV to your resolution, so widescreen players get extra side vision instead of losing the top and bottom of the view [2]. Set it to `1` to enable it.\n- `cl_gun_fovscale` (default `1`) compensates for weapon viewmodel distortion at FOV above 90; values above or below 1 adjust the amount [3].",
+   "answer": "Type `fov` followed by a number in the console. For example, `fov 110` widens your view. The default is `90`, and values are clamped between 10 and 170 [1].\n\n- `fov_adapt` defaults to `1` and automatically scales your FOV for widescreen resolutions, so you see more to the sides instead of losing top and bottom [2]. Set `fov_adapt 0` to turn that off.\n- `cl_gun_fovscale` defaults to `1` and compensates for weapon-model distortion when your FOV is above 90 [3]. You can adjust it with values above or below 1 to change the amount of distortion.",
    "citations": [
     {
      "label": "fov",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L163"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L163"
     },
     {
      "label": "fov_adapt",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L164"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L164"
     },
     {
      "label": "cl_gun_fovscale",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L180"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L180"
     }
    ],
    "related": [
@@ -294,9 +271,9 @@
     "cl_gun_fovscale"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "753acf0c2fddabec",
-   "generatedAt": "2026-09-27T18:24:37.812Z"
+   "sha": "789c1961c",
+   "hash": "22c38e1078578b03",
+   "generatedAt": "2026-09-29T01:03:31.401Z"
   },
   {
    "id": "resolution",
@@ -541,39 +518,45 @@
    "id": "crosshair",
    "section": "HUD and crosshair",
    "question": "How do I change my crosshair's style, color, and size?",
-   "answer": "Set your crosshair style with `crosshair`: `0` disables it, `1` is white, `2` is colored, and values up to `7` select other options; the stored default is `0` [1].\n\n- Color: `scr_crosshaircolor` accepts hex RGB or Quake color values `1`–`13`, e.g. `scr_crosshaircolor 0xff00ff` or `scr_crosshaircolor 12`. Default is `0xffffff` [2].\n- Size: `scr_crosshairscale` scales it, where `1` is normal and `10` is maximum, e.g. `scr_crosshairscale 2`. Default is `1` [3].\n- Opacity: `scr_crosshairalpha` sets alpha, e.g. `scr_crosshairalpha 0.5`. Default is `1` [4].",
+   "answer": "Set the crosshair type with `crosshair`: `0` is off (the default), `1` is white, `2` is colored, and values up to `7` give different options [1].\n\n- Color: `scr_crosshaircolor` — default `0xffffff`; accepts HEX RGB or Quake colors `1`–`13` [2].\n- Size: `scr_crosshairscale` — default `1`; `1` is normal, `10` is maximum enlargement [3].\n- Opacity: `scr_crosshairalpha` — default `1` [4].\n\nFor example: `crosshair 2`, `scr_crosshaircolor 0x00ff00`, `scr_crosshairscale 2`.\n\nIf damage blinking is enabled, `scr_crosshaircshift` sets the color the crosshair changes to when you take damage; default `0xfc7303` [5].",
    "citations": [
     {
      "label": "crosshair",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/view.c#L66"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/view.c#L66"
     },
     {
      "label": "scr_crosshaircolor",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L128"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L128"
     },
     {
      "label": "scr_crosshairscale",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L127"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L127"
     },
     {
      "label": "scr_crosshairalpha",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L129"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L129"
+    },
+    {
+     "label": "scr_crosshaircshift",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L130"
     }
    ],
    "related": [
     "crosshair",
     "scr_crosshaircolor",
     "scr_crosshairscale",
-    "scr_crosshairalpha"
+    "scr_crosshairalpha",
+    "scr_crosshaircshift"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "4788a1d1f0c8992c",
-   "generatedAt": "2026-09-27T18:25:11.363Z"
+   "sha": "789c1961c",
+   "hash": "824fa1051b476841",
+   "generatedAt": "2026-09-29T01:03:33.690Z"
   },
   {
    "id": "hud",
@@ -605,83 +588,77 @@
    "id": "showfps",
    "section": "HUD and crosshair",
    "question": "How do I show my FPS, ping, and a clock on screen?",
-   "answer": "Type these in the console:\n- FPS: `scr_showfps 1` displays FPS (default `0` hides it) [1].\n- Clock: `scr_clock 2` shows a 12-hour system clock in the lower right; `scr_clock 3` shows 24-hour time with seconds (default `0` hides it) [2].\n- Ping: shown by default in the lower-left when connected; if hidden, `scr_ping 1` shows ping in ms, or `scr_ping 3` adds packet-loss text [3].\n\nAll save to your config.",
+   "answer": "Type these in the console:\n\n- `scr_showfps 1` — shows FPS. Default is `0` (off) [1].\n- `scr_ping 1` — shows ping in milliseconds in the lower-left corner when connected. Default is already `1`; use `2` for ping without “ms”, or `3` for ping plus packet loss [2].\n- `scr_clock 2` — shows a 12-hour system clock in the lower-right corner. Use `scr_clock 3` for a 24-hour clock with seconds, or `scr_clock 1` for level time. Default is `0` (off) [3].\n\nAll three are saved to your config, so they persist between sessions [1][3][2].",
    "citations": [
     {
      "label": "scr_showfps",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L134"
-    },
-    {
-     "label": "scr_clock",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L138"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L134"
     },
     {
      "label": "scr_ping",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L140"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L140"
+    },
+    {
+     "label": "scr_clock",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L138"
     }
    ],
    "related": [
     "scr_showfps",
-    "scr_clock",
-    "scr_ping"
+    "scr_ping",
+    "scr_clock"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "1becca04b0f5b274",
-   "generatedAt": "2026-09-27T18:25:23.643Z"
+   "sha": "789c1961c",
+   "hash": "6f98d9628846c27f",
+   "generatedAt": "2026-09-29T01:03:38.577Z"
   },
   {
    "id": "console",
    "section": "HUD and crosshair",
    "question": "How do I open the console and change its size or font scale?",
-   "answer": "Run `toggleconsole` to lower or raise the console screen — it detects the current position and does the right thing [1].\n\nFor the console's size and text scale:\n\n- `scr_consize` sets the vertical length of the console while the game is active; default `.5`, i.e. half the screen [2].\n- `scr_conwidth` sets the virtual console width. Smaller numbers mean larger text, values are clamped to 320 up to the window width and rounded to a multiple of 8; `0` uses the window width [3]. Values that divide evenly into the window width look nicest [3].\n- `scr_conscale` scales console text larger; default `1`, and it only takes effect while `scr_conwidth` is `0` [4].\n- The `scr_autoscale` command calculates a UI scale from your current resolution and applies it to the console, menus, status bar, and crosshair [5].\n- Launch option `-consize` sets the console buffer size in kilobytes (default 65536 bytes) [6].",
+   "answer": "Press the tilde key (`~`) or type `toggleconsole` to lower or raise the console [1].\n\nTo change the console text size:\n\n- `scr_conscale` scales the console text larger, but only has an effect when `scr_conwidth` is 0. Default is `1` [2].\n- `scr_conwidth` sets the virtual console width, where smaller numbers mean larger text. Values below 320 or above the window width are clamped, and values are rounded to a multiple of 8. If 0, the window width is used. Default is `0` [3].\n- `scr_consize` sets the vertical length of the console while the game is active; default is `.5`, or half the screen [4].\n\nFor an automatic fit, run `scr_autoscale`, which calculates a UI scale from your current resolution and applies it to the console, menus, status bar, and crosshair [5].",
    "citations": [
     {
      "label": "toggleconsole",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/console.c#L1424"
-    },
-    {
-     "label": "scr_consize",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L126"
-    },
-    {
-     "label": "scr_conwidth",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L124"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/console.c#L1426"
     },
     {
      "label": "scr_conscale",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L125"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L125"
+    },
+    {
+     "label": "scr_conwidth",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L124"
+    },
+    {
+     "label": "scr_consize",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L126"
     },
     {
      "label": "scr_autoscale",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_screen.c#L1265"
-    },
-    {
-     "label": "-consize",
-     "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/console.c#L1381"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_screen.c#L1265"
     }
    ],
    "related": [
     "toggleconsole",
-    "scr_consize",
-    "scr_conwidth",
     "scr_conscale",
-    "scr_autoscale",
-    "-consize"
+    "scr_conwidth",
+    "scr_consize",
+    "scr_autoscale"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "5a619e66554f5283",
-   "generatedAt": "2026-09-27T18:25:27.492Z"
+   "sha": "789c1961c",
+   "hash": "beceeebb354f7e08",
+   "generatedAt": "2026-09-29T01:03:40.093Z"
   },
   {
    "id": "mouse",
@@ -734,69 +711,69 @@
    "id": "bind",
    "section": "Controls",
    "question": "How do I bind keys and make aliases?",
-   "answer": "Bind a key with `bind <key> <command>` [1]. To run several commands from one key, quote them and separate with semicolons, e.g. `bind q \"weapon 1; +attack\"` [1]. Keys that don't print characters are named instead, like `bind MOUSE1 +attack`; Escape and tilde can only be bound from an external config file [1].\n\nMake an alias by naming it and giving it a command string: `alias ready \"impulse 10; say go\"`, then bind it with `bind r ready` [2]. Typing `alias` alone prints every alias and its value [2]. `aliaslist` prints them alphabetized, and accepts a starting substring to filter [3].\n\nHousekeeping: `bindlist` shows all bindings [4], `unbind <key>` removes one [5], `unbindall` clears everything except Escape [6], and `unaliasall` deletes all aliases [7]. With `cl_aliasoverlap 1` (the default), an alias may shadow a console variable of the same name [8]; `cfg_save_aliases 1` (the default) saves your aliases to the config [9].",
+   "answer": "Bind a command to a key with `bind <key> <command>`, e.g. `bind g \"impulse 10\"` [1]. For several commands on one key, wrap them in quotes and separate with semicolons: `bind x \"+attack;+moveup\"` [1]. Keys without printable characters (like the arrow keys) are bound by name, and ESCAPE or ~ can only be bound from an external config file [1].\n\nTo create an alias, use `alias <name> \"<commands>\"` [2]. Multiple commands separated by semicolons work inside an alias too. Typing `alias` alone prints every alias and its assignment, and `alias ready` shows just that one's string [2].\n\nManage them with:\n- `bindlist` — list all key bindings [3]\n- `unbind <key>` — remove one binding [4]\n- `unbindall` — remove every binding except ESCAPE [5]\n- `aliaslist` — alphabetized list of aliases [6]\n- `unaliasall` — delete all aliases [7]\n\nAliases are saved to your config by default (`cfg_save_aliases` 1), and `cfg_unbindall` 1 clears old bindings before reloading them [8][9].",
    "citations": [
     {
      "label": "bind",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/keys.c#L3088"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/keys.c#L3229"
     },
     {
      "label": "alias",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L1307"
-    },
-    {
-     "label": "aliaslist",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L1317"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cmd.c#L1307"
     },
     {
      "label": "bindlist",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/keys.c#L3087"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/keys.c#L3228"
     },
     {
      "label": "unbind",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/keys.c#L3090"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/keys.c#L3231"
     },
     {
      "label": "unbindall",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/keys.c#L3091"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/keys.c#L3232"
+    },
+    {
+     "label": "aliaslist",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cmd.c#L1317"
     },
     {
      "label": "unaliasall",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L1302"
-    },
-    {
-     "label": "cl_aliasoverlap",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L29"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cmd.c#L1302"
     },
     {
      "label": "cfg_save_aliases",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L63"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L63"
+    },
+    {
+     "label": "cfg_unbindall",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L62"
     }
    ],
    "related": [
     "bind",
     "alias",
-    "aliaslist",
     "bindlist",
     "unbind",
     "unbindall",
+    "aliaslist",
     "unaliasall",
-    "cl_aliasoverlap",
-    "cfg_save_aliases"
+    "cfg_save_aliases",
+    "cfg_unbindall"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "778df9e0b6927897",
-   "generatedAt": "2026-09-27T18:25:37.640Z"
+   "sha": "789c1961c",
+   "hash": "0b1ea86aeec5797b",
+   "generatedAt": "2026-09-29T01:03:45.142Z"
   },
   {
    "id": "freelook",
@@ -841,119 +818,123 @@
    "id": "controller",
    "section": "Controls",
    "question": "Can I play with a gamepad or controller?",
-   "answer": "Yes. Controller support is enabled by default: `joy_enable` is `1`, and setting it to `0` disables controllers [1].\n\n- If your pad isn’t recognized, run `gamecontrollerdb_reload` to refresh SDL controller mappings [2].\n- Tune look speed with `joy_sensitivity_yaw` (default `240`) and `joy_sensitivity_pitch` (default `130`) [3][4].\n- Adjust stick deadzones with `joy_deadzone_look` and `joy_deadzone_move` (both default `0.175`) [4].\n- Rumble is controlled by `joy_rumble` (default `0.3`) [4].",
+   "answer": "Yes — controller support is enabled by default (`joy_enable` is `1`).\n\n- To turn it off, type `joy_enable 0`; set it back with `joy_enable 1` [1].\n- Adjust look speed with `joy_sensitivity_yaw` (default `240`) and `joy_sensitivity_pitch` (default `130`) [2][3].\n- If your controller’s buttons are mapped wrong, run `gamecontrollerdb_reload` to refresh SDL mappings [4].\n- If looking feels inverted, set `joy_invert 1` [3].",
    "citations": [
     {
      "label": "joy_enable",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/in_sdl.c#L538"
-    },
-    {
-     "label": "gamecontrollerdb_reload",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/in_sdl.c#L1739"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/in_sdl.c#L538"
     },
     {
      "label": "joy_sensitivity_yaw",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/in_sdl.c#L523"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/in_sdl.c#L523"
     },
     {
      "label": "Quake/in_sdl.c:487",
      "kind": "source",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba659/Quake/in_sdl.c#L487"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961/Quake/in_sdl.c#L487"
+    },
+    {
+     "label": "gamecontrollerdb_reload",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/in_sdl.c#L1739"
     }
    ],
    "related": [
     "joy_enable",
-    "gamecontrollerdb_reload",
     "joy_sensitivity_yaw",
     "joy_sensitivity_pitch",
-    "joy_deadzone_look",
-    "joy_deadzone_move",
-    "joy_rumble"
+    "gamecontrollerdb_reload",
+    "joy_invert"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "bdb86613ffbd9af0",
-   "generatedAt": "2026-09-27T18:25:44.100Z"
+   "sha": "789c1961c",
+   "hash": "c658ed809db45d26",
+   "generatedAt": "2026-09-29T01:03:53.353Z"
   },
   {
    "id": "connect",
    "section": "Multiplayer",
    "question": "How do I connect to a multiplayer server?",
-   "answer": "Type `connect` in the console, followed by the server's IP address, DNS hostname, or local-network server name: `connect 192.168.1.5` or `connect server.example.com` [1]. The default port is 26000; if the server uses a different port, set `port` first, e.g. `port 26001`, then run `connect` [1].\n\nTo find servers on your local network, run `slist` and connect using the displayed server name [2].\n\n- Tab autocompletes server history; `connect last` rejoins the last server [1].\n- `net_connectattempts` controls retries and defaults to `3` [3].\n- `net_connectsearch 1` (default) performs a local host search before connecting; set it to `0` to connect directly [4].\n- `net_connecttimeout` defaults to `10` seconds for stalled handshakes [5].\n\nIf you drop, `reconnect` quickly rejoins the last server [6].",
+   "answer": "Open the console and type `connect` followed by the server’s IP address, DNS hostname, or local server name [1]. The default port is 26000; if the server uses a different port, set the `port` variable to that number before connecting [1].\n\n- To find local servers, use `slist`; it broadcasts on the local network and lists servers you can then connect to by name [2].\n- To reconnect to the last server, use `connect last` [1].\n- Press Tab after `connect` to autocomplete from server history [1].\n- If you get disconnected, `reconnect` quickly reconnects to the last network server [3].\n- To leave a server, use `disconnect` [4].\n\nConnection retries are controlled by `net_connectattempts`, default `3` [5]. The handshake timeout is `net_connecttimeout`, default `10` seconds [6]. `net_connectsearch` defaults to `1`; set it to `0` to skip the local host search before connecting [7].",
    "citations": [
     {
      "label": "connect",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13141"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13135"
     },
     {
      "label": "slist",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L1618"
-    },
-    {
-     "label": "net_connectattempts",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L148"
-    },
-    {
-     "label": "net_connectsearch",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L145"
-    },
-    {
-     "label": "net_connecttimeout",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L146"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/net_main.c#L1618"
     },
     {
      "label": "reconnect",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13142"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13136"
+    },
+    {
+     "label": "disconnect",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L8076"
+    },
+    {
+     "label": "net_connectattempts",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/net_main.c#L148"
+    },
+    {
+     "label": "net_connecttimeout",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/net_main.c#L146"
+    },
+    {
+     "label": "net_connectsearch",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/net_main.c#L145"
     }
    ],
    "related": [
     "connect",
     "port",
     "slist",
+    "reconnect",
+    "disconnect",
     "net_connectattempts",
-    "net_connectsearch",
     "net_connecttimeout",
-    "reconnect"
+    "net_connectsearch"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "68c91436c8211527",
-   "generatedAt": "2026-09-27T18:25:48.433Z"
+   "sha": "789c1961c",
+   "hash": "88a798d1bf929916",
+   "generatedAt": "2026-09-29T01:03:57.511Z"
   },
   {
    "id": "name",
    "section": "Multiplayer",
    "question": "How do I set my player name and colors?",
-   "answer": "Use the `name` command: `name YourName`. QSS-M recommends `name` over the `name` cvar, and it handles names with special characters well [1][2]. The saved default is `player` [1].\n\nFor player colors, use `color` [3]. Typing `color` alone reports your current shirt and pants colors. One value sets both to the same color, e.g. `color 12`; two values set shirt and pants separately, e.g. `color 4 13` (red shirt, blue pants) [3][4]. Valid colors are 0–13; anything above that just makes the player look blue [3]. For random colors, use `color x x` [3].",
+   "answer": "Type `name` in the console to set your player name — with no argument it opens the name for editing, which is handy for names with special characters [1]. The name defaults to `player` [2].\n\nFor colors, use the `color` command [3]:\n\n- `color 4` sets both shirt and pants to red.\n- `color 4 13` sets shirt red and pants blue.\n- `color x x` picks random colors for both [3].\n\nColors range from 0 to 13; anything above that just renders blue [3]. The traditional values are 0 white, 1 brown, 2 light blue, 3 green, 4 red, 5 orange, 6 gold, 7 peach, 8 purple, 9 magenta, 10 tan, 11 green, 12 yellow, 13 blue [4]. Hex RGB works too, e.g. `color 0xff00ff 0x00ff00` [3]. Typing `color` alone reports your current shirt and pants colors [3].",
    "citations": [
     {
      "label": "name",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L53"
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13139"
     },
     {
      "label": "name",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13145"
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L53"
     },
     {
      "label": "color",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13158"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13152"
     },
     {
-     "label": "Quake/host_cmd.c:10359",
+     "label": "Quake/host_cmd.c:10353",
      "kind": "source",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba659/Quake/host_cmd.c#L10359"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961/Quake/host_cmd.c#L10353"
     }
    ],
    "related": [
@@ -961,9 +942,9 @@
     "color"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "007b2873ab1f5234",
-   "generatedAt": "2026-09-27T18:26:02.173Z"
+   "sha": "789c1961c",
+   "hash": "5feb7cdd7a619a58",
+   "generatedAt": "2026-09-29T01:03:59.284Z"
   },
   {
    "id": "lag",
@@ -1019,64 +1000,64 @@
    "id": "chat",
    "section": "Multiplayer",
    "question": "How do I chat, team chat, and mute other players?",
-   "answer": "Use `messagemode` to open a chat line to everyone, or `say <message>` to send directly [1][2]. For team-only chat, use `messagemode2` (unbound by default) or `say_team <message>` [3][4].\n\n- With `cl_chatmode 1`, anything Quake can't interpret is sent as chat, so you don't need to type `say` first. The recorded default is `0` [5]. Value `2` adds a leading space to console lines so normal commands aren't triggered [5].\n\n- To mute a player's text chat: `ignore <name>`, or `ignore` alone to list ignored players. Restore with `unignore <name>`. Both match partial names and clear when you disconnect [6][7].\n\n- To mute voice chat: `vignore <slot> 1`; unmute with `vignore <slot> 0` [8]. `unmuteall` unmutes everyone you previously ignored [9].\n\n- `mute` only toggles your overall sound volume (CTRL-M), not players [10].",
+   "answer": "To chat to everyone, type `say <message>`, or run `messagemode` to open the text line; press Enter to send, Escape to cancel [1][2]. For team-only chat, use `say_team <message>` or `messagemode2` [3][4]. `messagemode2` is not bound by default [4]. To send plain console lines as chat, set `cl_chatmode 1` (default `0`); value `2` adds a leading space so commands, cvars, and aliases aren’t triggered [5].\n\nTo mute a player’s text chat, type `ignore <name>` while connected; `ignore` alone lists ignored players, and `unignore <name>` restores them. Partial names work, and the list clears when you disconnect [6][7]. To mute voice chat, use `vignore <slot> 1`; `vignore <slot> 0` unmutes, and `unmuteall` unmutes everyone you vignore’d [8][9]. The `mute` command only toggles your own volume [10].",
    "citations": [
-    {
-     "label": "messagemode",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/console.c#L1425"
-    },
     {
      "label": "say",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13150"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13144"
+    },
+    {
+     "label": "messagemode",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/console.c#L1427"
     },
     {
      "label": "say_team",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13152"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13146"
     },
     {
      "label": "messagemode2",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/console.c#L1426"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/console.c#L1428"
     },
     {
      "label": "cl_chatmode",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L88"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L88"
     },
     {
      "label": "ignore",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13156"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13150"
     },
     {
      "label": "unignore",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13157"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13151"
     },
     {
      "label": "vignore",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/snd_voip.c#L2842"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/snd_voip.c#L2842"
     },
     {
      "label": "unmuteall",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/snd_voip.c#L2841"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/snd_voip.c#L2841"
     },
     {
      "label": "mute",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/snd_dma.c#L691"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/snd_dma.c#L691"
     }
    ],
    "related": [
-    "messagemode",
     "say",
-    "messagemode2",
+    "messagemode",
     "say_team",
+    "messagemode2",
     "cl_chatmode",
     "ignore",
     "unignore",
@@ -1085,116 +1066,129 @@
     "mute"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "60061e95b11a1fff",
-   "generatedAt": "2026-09-27T18:26:26.853Z"
+   "sha": "789c1961c",
+   "hash": "1e320c9f2ac241b3",
+   "generatedAt": "2026-09-29T01:04:04.758Z"
   },
   {
    "id": "host",
    "section": "Multiplayer",
    "question": "How do I host my own server?",
-   "answer": "Start a dedicated server by launching QSS-M with the `-dedicated` command-line option; in QSS-M the player count defaults to 16 if you don't give a number [1].\n\n- To set a specific count, pass it directly, e.g. `-dedicated 16`. The maximum allowed is 16 [1]. A dedicated server stays in text mode, with most console commands still available [1].\n- Name your server with `hostname \"My Server\"` (default is `UNNAMED`) [2].\n- For a public server, set `deathmatch 3` — that's the recommended value, since weapons stay on the map [3].\n- Use `maxplayers` to change the cap while running. The engine sets 8 for a dedicated server started without a number, and only `-dedicated 16` (or `-listen 16`) reaches 16 [4].\n\nRunning a listen server as public access isn't recommended [4].",
+   "answer": "Run the engine with `-dedicated` to start a dedicated server; it stays in text mode and defaults to 16 players, the maximum allowed [1]. A listen server is started with `-listen 16` instead, but running one as a public server isn't recommended [2].\n\nThen set it up from the console:\n\n- `hostname \"My Server\"` — the name other players see [3]\n- `deathmatch 3` — recommended for a public server, so weapons don't disappear [4]\n- `maxplayers 16` — cap the player count [2]\n- `password \"secret\"` — optional, to require a password [5]\n- `rcon_password \"secret\"` — optional, for remote admin [5]\n\nUse `-port <n>` if you need a port other than the default 26000 [6].",
    "citations": [
     {
      "label": "-dedicated",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host.c#L744"
-    },
-    {
-     "label": "hostname",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L149"
-    },
-    {
-     "label": "deathmatch",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host.c#L96"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host.c#L744"
     },
     {
      "label": "maxplayers",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L1620"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/net_main.c#L1620"
+    },
+    {
+     "label": "hostname",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/net_main.c#L149"
+    },
+    {
+     "label": "deathmatch",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host.c#L96"
+    },
+    {
+     "label": "Quake/net_dgrm.c:66",
+     "kind": "source",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961/Quake/net_dgrm.c#L66"
+    },
+    {
+     "label": "Quake/net_main.c:1565",
+     "kind": "source",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961/Quake/net_main.c#L1565"
     }
    ],
    "related": [
     "-dedicated",
+    "-listen",
     "hostname",
     "deathmatch",
     "maxplayers",
-    "-listen"
+    "password",
+    "rcon_password",
+    "-port"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "27840b8476bee7ce",
-   "generatedAt": "2026-09-27T18:26:34.635Z"
+   "sha": "789c1961c",
+   "hash": "9837872ca217459b",
+   "generatedAt": "2026-09-29T01:04:41.643Z"
   },
   {
    "id": "demo",
    "section": "Demos and media",
    "question": "How do I record and play back demos?",
-   "answer": "To record a demo, open the console and type `record`. With no arguments, it saves to `id1/demos` using the map name and date as the filename [1]. Recordings use the format set by `cl_demo_format`—default `dem`; supported builds also accept `dz` for compressed DZip [2]. Type `stop` to end recording and write the demo to disk [3]. For automatic recording, `cl_autodemo` defaults to `0`; set `1` to record every new map, `2` for official CRMOD/CRCTF matches only, `3` for online-only, or `4` to split at map changes [4].\n\nTo play a demo back, type `playdemo` followed by the demo name [5]. Stop playback with `stopdemo` [6]. You can also queue up to 32 demos with `startdemos` and play them with `demos`; `startdemos` follows `cl_demoreel` (default `1`), so demos play in sequence when enabled [7][8][9]. Demo files must exist in your Quake directory, and the `.dem` extension is not needed for `startdemos` [7].",
+   "answer": "To record, type `record` in the console. With no arguments it saves to `id1/demos`, using the map name and date as the filename [1]. Type `stop` to end recording; the demo is then written to disk [2]. The recording format is set by `cl_demo_format`, default `dem`; supported builds also accept `dz` for compressed DZip archives [3]. For automatic recording, `cl_autodemo` defaults to `0`; set it to `1` to record every new map, `2` for official CRMOD/CRCTF matches only, `3` for online only, or `4` to split at map changes [4].\n\nTo play a demo, use `playdemo <name>` [5]; stop it with `stopdemo` [6]. To queue several demos, use `startdemos e1m1 dm3 quad` (up to 32, no `.dem` extension needed) [7]. `cl_demoreel` defaults to `1`, so queued demos play in sequence; if set to `0`, `startdemos` opens the menu instead [7][8]. `demos` plays demos queued with `startdemos` [9].",
    "citations": [
     {
      "label": "record",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L8055"
-    },
-    {
-     "label": "cl_demo_format",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L79"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L8077"
     },
     {
      "label": "stop",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L8057"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L8079"
+    },
+    {
+     "label": "cl_demo_format",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L79"
     },
     {
      "label": "cl_autodemo",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_rmain.c#L75"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_rmain.c#L75"
     },
     {
      "label": "playdemo",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L8058"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cl_main.c#L8080"
     },
     {
      "label": "stopdemo",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13183"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13177"
     },
     {
      "label": "startdemos",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13181"
-    },
-    {
-     "label": "demos",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host_cmd.c#L13182"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13175"
     },
     {
      "label": "Quake/cl_main.c:74",
      "kind": "source",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba659/Quake/cl_main.c#L74"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961/Quake/cl_main.c#L74"
+    },
+    {
+     "label": "demos",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/host_cmd.c#L13176"
     }
    ],
    "related": [
     "record",
-    "cl_demo_format",
     "stop",
+    "cl_demo_format",
     "cl_autodemo",
     "playdemo",
     "stopdemo",
     "startdemos",
-    "demos",
-    "cl_demoreel"
+    "cl_demoreel",
+    "demos"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "2f62debfe5545bef",
-   "generatedAt": "2026-09-27T18:26:42.565Z"
+   "sha": "789c1961c",
+   "hash": "cc426abced2709c5",
+   "generatedAt": "2026-09-29T01:05:48.189Z"
   },
   {
    "id": "screenshot",
@@ -1318,51 +1312,60 @@
    "id": "crash",
    "section": "Troubleshooting",
    "question": "QSS-M won't start or crashes. What should I try?",
-   "answer": "If QSS-M fails to launch or crashes, start by narrowing down the cause.\n\n- Sound is a common culprit. Launch with `-nosound` to disable hardware sound [1]. In-game, `nosound 1` stops sound effects, but it only takes full effect after restarting the game or changing maps [2] (default is `0`) [2].\n- To see what happened, start the game with `-condebug` to save the console log to `qconsole.log` [3], then read that file. You can also type `condump` to write the console buffer to `condump.txt` [4].\n- If it looks like a video mode problem, check `vid_bpp` — valid values are 16 or 32, default `16`, and windowed mode ignores it [5] — then re-apply your mode with `vid_restart` [6].",
+   "answer": "If QSS-M fails to launch, the usual culprits are sound or video initialization.\n\n- Start with sound disabled: launch with `-nosound` [1]. You can also set `nosound 1` in the console, though it only fully silences everything after a restart or map change [2].\n- For video problems, run `vid_restart`, which re-applies `vid_width`, `vid_height`, `vid_fullscreen`, `vid_refreshrate`, and `vid_bpp` [3]. If you're stuck in a bad fullscreen mode, try `vid_bpp 16` (the default; 16 or 32 are the valid values) and then `vid_restart` [4].\n- To capture what happens before a crash, launch with `-condebug` to write a log to `qconsole.log` [5]. You can cap the log size in MiB, e.g. `-condebug 5` [6]. Once running, `condump` writes the console buffer to `condump.txt` [7].",
    "citations": [
     {
      "label": "-nosound",
      "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/snd_dma.c#L678"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/snd_dma.c#L678"
     },
     {
      "label": "nosound",
      "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/snd_dma.c#L402"
-    },
-    {
-     "label": "-condebug",
-     "kind": "param",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/console.c#L2419"
-    },
-    {
-     "label": "condump",
-     "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/console.c#L1428"
-    },
-    {
-     "label": "vid_bpp",
-     "kind": "cvar",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_vidsdl.c#L207"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/snd_dma.c#L402"
     },
     {
      "label": "vid_restart",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_vidsdl.c#L2639"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_vidsdl.c#L2639"
+    },
+    {
+     "label": "vid_bpp",
+     "kind": "cvar",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/gl_vidsdl.c#L207"
+    },
+    {
+     "label": "-condebug",
+     "kind": "param",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/console.c#L2421"
+    },
+    {
+     "label": "Quake/console.c:2418",
+     "kind": "source",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961/Quake/console.c#L2418"
+    },
+    {
+     "label": "condump",
+     "kind": "command",
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/console.c#L1430"
     }
    ],
    "related": [
     "-nosound",
     "nosound",
-    "-condebug",
-    "condump",
+    "vid_restart",
+    "vid_width",
+    "vid_height",
+    "vid_fullscreen",
+    "vid_refreshrate",
     "vid_bpp",
-    "vid_restart"
+    "-condebug",
+    "condump"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "278cf2e38af7d848",
-   "generatedAt": "2026-09-27T18:26:53.139Z"
+   "sha": "789c1961c",
+   "hash": "d380a6b6ef8dd0f9",
+   "generatedAt": "2026-09-29T01:05:53.306Z"
   },
   {
    "id": "stutter",
@@ -1406,27 +1409,27 @@
    "id": "cvarsearch",
    "section": "Troubleshooting",
    "question": "How do I find a setting when I don't know its name?",
-   "answer": "Type `apropos` or `find` followed by a word you do remember — both search command and console-variable names for a substring anywhere in the name [1][2].\n\nFor example, if you're hunting for a mouse setting, try `apropos mouse`. Anything matching is printed for you.\n\nIf you'd rather browse:\n\n- `cmdlist` prints an alphabetized list of every command; add a substring to list only commands *starting* with it [3].\n- `cvarlist` does the same for console variables [4].\n\nSo `cvarlist cl_` shows every cvar whose name begins with `cl_`, while `apropos cl_` will catch matches anywhere in the name.",
+   "answer": "If you don't know the exact name, search for a fragment of it.\n\n- `apropos <text>` searches command and cvar names for the given substring [1].\n- `find <text>` does the same thing [2].\n- `cmdlist` prints an alphabetized list of all commands; add a substring to list only commands that start with it [3].\n- `cvarlist` prints an alphabetized list of all console variables; add a substring to list only cvars that start with it [4].\n\nFor example, if you remember a setting has \"name\" in it, try `apropos name` or `find name`. If you know how it starts, `cvarlist cl_` narrows the list to cvars beginning with `cl_`.",
    "citations": [
     {
      "label": "apropos",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L1312"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cmd.c#L1312"
     },
     {
      "label": "find",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L1313"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cmd.c#L1313"
     },
     {
      "label": "cmdlist",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cmd.c#L1299"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cmd.c#L1299"
     },
     {
      "label": "cvarlist",
      "kind": "command",
-     "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cvar.c#L542"
+     "url": "https://github.com/timbergeron/QSS-M/blob/789c1961c/Quake/cvar.c#L542"
     }
    ],
    "related": [
@@ -1436,9 +1439,9 @@
     "cvarlist"
    ],
    "model": "deepseek/deepseek-v4.1-flash",
-   "sha": "888ba6591",
-   "hash": "246da89252e13dbb",
-   "generatedAt": "2026-09-27T18:27:00.204Z"
+   "sha": "789c1961c",
+   "hash": "462973e3f723f3c0",
+   "generatedAt": "2026-09-29T01:05:59.175Z"
   }
  ]
 }
