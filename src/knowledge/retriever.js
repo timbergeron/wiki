@@ -17,6 +17,7 @@ const COMMON_TERM_RATIO = 0.1;
 // "when did", "what changed", "why does" are answered by history, not by current code.
 // "where is", "which file", "how is it implemented" are answered by code, not by a catalog row.
 const LOCATION_INTENT = /\b(where|which file|what file|located|location|implement\w*|defined|handles?|handled|source file)\b/i;
+const LOCATION_WORDS = new Set(["source", "file", "implements", "implement", "implemented", "implementation", "located", "location", "defined"]);
 const HISTORY_INTENT = /\b(when|why|changed?|changes|recent|recently|history|commits?|touched?|regress\w*|introduced|added|removed|broke|broken|since)\b/i;
 
 export function questionTokens(question) {
@@ -231,10 +232,17 @@ export class PackIndex {
   }
 
   retrieve(question) {
-    const tokens = questionTokens(question);
+    let tokens = questionTokens(question);
     if (!tokens.length) return [];
     const locationIntent = LOCATION_INTENT.test(question);
     const historyIntent = HISTORY_INTENT.test(question);
+
+    // "Which source file implements ..." describes the requested answer, not its
+    // topic. Otherwise source/file matches can bury the relevant subsystem.
+    if (locationIntent) {
+      const topic = tokens.filter((token) => !LOCATION_WORDS.has(token.lower));
+      if (topic.length) tokens = topic;
+    }
 
     const resolved = this.collectCandidates(tokens, historyIntent ? "commit" : "")
       .map((candidate) => {

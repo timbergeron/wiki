@@ -2,8 +2,7 @@
 //  1. the extracted reference (every cvar/command/launch option that exists in the
 //     current source, with its real default and the sheet's human description), and
 //  2. the Nullius-derived full-text index over engine source, docs, and history.
-// Both the FAQ generator and the live Ask endpoint use this, so a generated answer and
-// a live answer see the same material.
+// The live search/Ask endpoint uses this evidence to answer visitor questions.
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { indexPathFor } from "./knowledge/build.js";

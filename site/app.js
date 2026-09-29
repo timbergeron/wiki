@@ -215,7 +215,7 @@ function renderResults() {
     } else {
       button.innerHTML = `<span class="result-icon ask">${ICON.spark}</span>
         <span><div class="result-title">Ask: “${escapeHtml(query.trim())}”</div>
-        <div class="result-sub">Get an answer written from the live source code</div></span>
+        <div class="result-sub">Get an answer from the indexed QSS-M source</div></span>
         <span class="result-meta">↵</span>`;
     }
     return button;
@@ -339,7 +339,7 @@ function renderFaq() {
     toc.hidden = true;
     list.parentElement.classList.add("single");
     list.replaceChildren(el("div", { className: "empty", innerHTML:
-      "Answers are being written from the latest source — check back soon. Until then, search and the console reference below cover every setting." }));
+      "FAQ answers are being prepared. Until then, use search and the console reference below." }));
     return;
   }
   const sections = [...new Set(state.faq.map((item) => item.section))];
@@ -520,7 +520,7 @@ function renderMeta() {
   const { source, counts } = state.reference;
   const eyebrow = $("#version-line");
   eyebrow.innerHTML = `<span class="dot"></span> QSS-M ${escapeHtml(source.version)} · last commit ${escapeHtml(relativeTime(source.committedAt))} · <a href="${escapeHtml(source.repo)}/commit/${escapeHtml(source.sha)}" target="_blank" rel="noopener">${escapeHtml(source.shortSha)}</a>`;
-  $("#console-sub").textContent = `All ${counts.cvars} variables and ${counts.commands} commands the engine registers today — defaults straight from the source.`;
+  $("#console-sub").textContent = `${counts.cvars} variables and ${counts.commands} commands in this source revision — defaults straight from the code.`;
   $("#foot-source").innerHTML = `Built from <a href="${escapeHtml(source.repo)}" target="_blank" rel="noopener">QSS-M</a> ${escapeHtml(source.version)} at <code>${escapeHtml(source.shortSha)}</code>, ${escapeHtml(new Date(source.committedAt).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }))}.`;
 
   const PICKS = [["crosshair", "Crosshair"], ["fov", "Field of view"], ["fps", "Uncap FPS"], ["connect", "Join a server"], ["demo", "Record demos"]];

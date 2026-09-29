@@ -160,12 +160,13 @@ async function versionString() {
 }
 
 async function main() {
-  const [{ cvars, commands, params }, sheet, commit, version, log] = await Promise.all([
+  const [{ cvars, commands, params }, sheet, commit, version, log, overrides] = await Promise.all([
     scanSource(),
     loadSheet(),
     git("log", "-1", "--format=%H|%cI|%s"),
     versionString(),
     git("log", "-40", "--no-merges", "--format=%H|%cI|%s"),
+    readFile(path.join(root, "reference", "overrides.json"), "utf8").then(JSON.parse),
   ]);
 
   // Fixed-length short hashes: git's %h length varies by clone, which would make
@@ -175,19 +176,20 @@ async function main() {
   const entries = [];
   for (const item of [...cvars.values(), ...commands.values(), ...params.values()]) {
     const notes = sheet.get(item.name.toLowerCase()) || {};
+    const reviewed = overrides[item.name.toLowerCase()] || {};
     entries.push({
       ...item,
       category: item.kind === "param" ? "Launch options" : categoryFor(item.name, notes.category || ""),
       origin: notes.engine || "",
-      summary: notes.summary || "",
-      description: notes.description || "",
+      summary: reviewed.summary ?? notes.summary ?? "",
+      description: reviewed.description ?? notes.description ?? "",
       url: `${REPO}/blob/${shortSha}/${item.file}#L${item.line}`,
     });
   }
   entries.sort((a, b) => a.name.replace(/^[+-]/, "").localeCompare(b.name.replace(/^[+-]/, "")));
 
-  // No build timestamp: the file changes only when QSS-M or the sheet does, so the
-  // refresh job commits (and redeploys) only real updates.
+  // Keep rebuilds deterministic: only source, sheet, or local prose changes
+  // should change the published reference.
   const reference = {
     source: { repo: REPO, sha, shortSha, committedAt, subject, version },
     counts: {
@@ -207,7 +209,7 @@ async function main() {
   await writeFile(path.join(output, "reference.json"), `${JSON.stringify(reference, null, 1)}\n`);
   console.log(
     `QSS-M ${version} @ ${shortSha}: ${cvars.size} cvars, ${commands.size} commands, ` +
-    `${params.size} launch options (${reference.counts.described} described by the sheet)`,
+    `${params.size} launch options (${reference.counts.described} with descriptions)`,
   );
 }
 

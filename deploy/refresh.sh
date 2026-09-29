@@ -1,6 +1,6 @@
 #!/bin/sh
-# Pull the latest QSS-M, then rebuild the index, reference, and any FAQ answers whose
-# evidence changed. The running server picks up the new files on its next request.
+# Run manually in the local workspace to pull QSS-M and rebuild the index and reference.
+# FAQ content is maintained here separately; this does not call OpenRouter.
 set -eu
 cd "$(dirname "$0")/.."
 QSSM_DIR="${QSSM_DIR:-../QSS-M}"

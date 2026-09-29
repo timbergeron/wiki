@@ -1,15 +1,15 @@
 [
   {"section": "Getting started", "id": "install", "question": "Where do my Quake game files go?", "hints": ["id1", "pak0.pak", "pak1.pak", "-basedir", "quakespasm.pak", "path"]},
-  {"section": "Getting started", "id": "config", "question": "Where are my settings saved, and how do I use an autoexec.cfg?", "hints": ["config.cfg", "autoexec", "exec", "writeconfig", "host_writeconfig"]},
+  {"section": "Getting started", "id": "config", "question": "Where are my settings saved, and how do I use an autoexec.cfg?", "hints": ["config.cfg", "autoexec", "exec", "writeconfig", "cfg_save_aliases"]},
   {"section": "Getting started", "id": "mods", "question": "How do I run a mod or mission pack?", "hints": ["-game", "game", "-rogue", "-hipnotic", "-quoth"]},
   {"section": "Getting started", "id": "maps", "question": "How do I download and play custom maps?", "hints": ["map", "cl_web_download_url", "download", "maps"]},
   {"section": "Getting started", "id": "reset", "question": "How do I reset everything back to the defaults?", "hints": ["resetall", "resetcfg", "cvar reset", "config.cfg"]},
 
-  {"section": "Graphics", "id": "fov", "question": "How do I change my field of view?", "hints": ["fov", "fov_adapt", "r_viewmodel_fov"]},
+  {"section": "Graphics", "id": "fov", "question": "How do I change my field of view?", "hints": ["fov", "fov_adapt", "cl_gun_fovscale"]},
   {"section": "Graphics", "id": "resolution", "question": "How do I change resolution, fullscreen, and vsync?", "hints": ["vid_width", "vid_height", "vid_fullscreen", "vid_vsync", "vid_restart"]},
   {"section": "Graphics", "id": "fps", "question": "How do I uncap or limit my framerate?", "hints": ["host_maxfps", "vid_vsync", "scr_showfps"]},
   {"section": "Graphics", "id": "brightness", "question": "The game is too dark. How do I adjust brightness and gamma?", "hints": ["gamma", "contrast", "r_lightmap"]},
-  {"section": "Graphics", "id": "filtering", "question": "How do I get the classic pixelated look, or smooth textures instead?", "hints": ["gl_texturemode", "gl_texture_anisotropy", "r_scale", "texturemode"]},
+  {"section": "Graphics", "id": "filtering", "question": "How do I get the classic pixelated look, or smooth textures instead?", "hints": ["gl_texturemode", "gl_texture_anisotropy", "r_scale", "r_softemu"]},
   {"section": "Graphics", "id": "weapon", "question": "How do I hide or reposition the weapon model?", "hints": ["r_drawviewmodel", "cl_gunx", "scr_ofsx", "r_viewmodel_quake"]},
 
   {"section": "HUD and crosshair", "id": "crosshair", "question": "How do I change my crosshair's style, color, and size?", "hints": ["crosshair", "scr_crosshaircolor", "scr_crosshairscale", "scr_crosshairalpha"]},
@@ -19,21 +19,21 @@
 
   {"section": "Controls", "id": "mouse", "question": "How do I adjust mouse sensitivity or invert the mouse?", "hints": ["sensitivity", "m_pitch", "m_yaw", "in_disablemacosxmouseaccel", "seta"]},
   {"section": "Controls", "id": "bind", "question": "How do I bind keys and make aliases?", "hints": ["bind", "unbind", "alias", "bindlist"]},
-  {"section": "Controls", "id": "freelook", "question": "How do I turn on mouse look and always run?", "hints": ["freelook", "+mlook", "cl_alwaysrun", "lookspring"]},
-  {"section": "Controls", "id": "controller", "question": "Can I play with a gamepad or controller?", "hints": ["joy_enable", "joy_deadzone", "joy_sensitivity_yaw"]},
+  {"section": "Controls", "id": "freelook", "question": "How do I turn on mouse look and always run?", "hints": ["-mlook", "+mlook", "cl_alwaysrun", "lookspring"]},
+  {"section": "Controls", "id": "controller", "question": "Can I play with a gamepad or controller?", "hints": ["joy_enable", "joy_deadzone_look", "joy_deadzone_move", "joy_sensitivity_yaw"]},
 
   {"section": "Multiplayer", "id": "connect", "question": "How do I connect to a multiplayer server?", "hints": ["connect", "reconnect", "serverhostnames", "slist"]},
-  {"section": "Multiplayer", "id": "name", "question": "How do I set my player name and colors?", "hints": ["name", "color", "_cl_name", "_cl_color"]},
+  {"section": "Multiplayer", "id": "name", "question": "How do I set my player name and colors?", "hints": ["name", "color", "player", "_cl_color"]},
   {"section": "Multiplayer", "id": "lag", "question": "How do I check my connection and make online play feel smoother?", "hints": ["host_maxfps", "net_stats", "scr_ping", "cl_nopred", "cl_nolerp", "packets per second"]},
   {"section": "Multiplayer", "id": "chat", "question": "How do I chat, team chat, and mute other players?", "hints": ["say", "say_team", "messagemode", "ignore", "cl_chatmode"]},
-  {"section": "Multiplayer", "id": "host", "question": "How do I host my own server?", "hints": ["-dedicated", "maxplayers", "sv_public", "hostname", "deathmatch"]},
+  {"section": "Multiplayer", "id": "host", "question": "How do I host my own server?", "hints": ["-dedicated", "maxplayers", "sv_public", "-port", "hostname", "deathmatch"]},
 
   {"section": "Demos and media", "id": "demo", "question": "How do I record and play back demos?", "hints": ["record", "stop", "playdemo", "cl_autodemo", "cl_demo_format"]},
-  {"section": "Demos and media", "id": "screenshot", "question": "How do I take screenshots, and where are they saved?", "hints": ["screenshot", "screenshots", "open", "scr_screenshot_format", "qssm_"]},
+  {"section": "Demos and media", "id": "screenshot", "question": "How do I take screenshots, and where are they saved?", "hints": ["screenshot", "screenshots", "open", "screenshot png", "qssm_"]},
 
   {"section": "Sound", "id": "sound", "question": "How do I change volume and music?", "hints": ["volume", "bgmvolume", "bgm_extmusic", "music"]},
 
-  {"section": "Troubleshooting", "id": "crash", "question": "QSS-M won't start or crashes. What should I try?", "hints": ["-safemode", "-nosound", "vid_restart", "condump", "-condebug"]},
-  {"section": "Troubleshooting", "id": "stutter", "question": "Why does the game stutter or the sound crackle?", "hints": ["_snd_mixahead", "host_maxfps", "vid_vsync", "snd_speed"]},
+  {"section": "Troubleshooting", "id": "crash", "question": "QSS-M won't start or crashes. What should I try?", "hints": ["-window", "-nosound", "vid_restart", "condump", "-condebug"]},
+  {"section": "Troubleshooting", "id": "stutter", "question": "Why does the game stutter or the sound crackle?", "hints": ["_snd_mixahead", "host_maxfps", "vid_vsync", "snd_mixspeed"]},
   {"section": "Troubleshooting", "id": "cvarsearch", "question": "How do I find a setting when I don't know its name?", "hints": ["cvarlist", "cmdlist", "apropos", "find"]}
 ]

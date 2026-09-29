@@ -1,22 +1,17 @@
-name: Refresh from QSS-M
+name: Publish wiki
 
 on:
-  schedule:
-    - cron: "17 */3 * * *"
   workflow_dispatch:
-  # QSS-M can trigger an immediate refresh after each push; see README.
-  repository_dispatch:
-    types: [qssm-updated]
   push:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: refresh
+  group: publish-wiki
   cancel-in-progress: false
 
 jobs:
@@ -24,37 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
-      - name: Check out QSS-M
-        uses: actions/checkout@v5
-        with:
-          repository: timbergeron/QSS-M
-          path: QSS-M
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-
-      - name: Index source, extract reference, generate FAQ
-        run: npm run refresh
-        env:
-          QSSM_DIR: ${{ github.workspace }}/QSS-M
-          KNOWLEDGE_SOURCE_QSSM: ${{ github.workspace }}/QSS-M
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'deepseek/deepseek-v4.1-flash' }}
-
-      - name: Commit refreshed data
-        run: |
-          git add site/data
-          if git diff --cached --quiet; then
-            echo "No changes."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "Refresh from QSS-M $(jq -r .source.shortSha site/data/reference.json)"
-            git push
-          fi
 
       - uses: actions/upload-pages-artifact@v4
         with:

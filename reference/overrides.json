@@ -1,0 +1,8 @@
+{
+  "host_maxfps": {
+    "summary": "Caps rendering FPS; 0 uncaps gameplay rendering. Negative values select a separate network/simulation rate.",
+    "description": "Defaults to 250. Positive values cap rendering between 10 and 5000 FPS; 0 removes the gameplay cap. Vsync can still limit rendering, and the disconnected menu has its own cap. Negative values leave rendering uncapped and request a network/simulation interval between 10 and 150 Hz: for example, -72 requests 72 Hz. Zero and positive values above 72 use a 72 Hz interval. These are scheduling targets, not guarantees of a particular packet rate or lower latency.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/host.c:80", "Quake/host.c:193", "Quake/host.c:1565"]
+  }
+}

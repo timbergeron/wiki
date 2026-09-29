@@ -8,8 +8,7 @@
     "start": "node --env-file-if-exists=.env src/server.js",
     "index": "node --env-file-if-exists=.env scripts/knowledge.js build qssm",
     "extract": "node --env-file-if-exists=.env scripts/extract.js",
-    "generate": "node --env-file-if-exists=.env scripts/generate.js",
-    "refresh": "npm run index && npm run extract && npm run generate",
+    "refresh": "npm run index && npm run extract",
     "check": "node --check src/*.js && node --check src/knowledge/*.js && node --check scripts/*.js && node --check site/app.js",
     "knowledge": "node --env-file-if-exists=.env scripts/knowledge.js"
   },
