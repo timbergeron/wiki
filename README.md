@@ -23,6 +23,8 @@ npm start                   # http://localhost:3012
 
 The source code decides what exists and its default value. The [commands sheet](https://docs.google.com/spreadsheets/d/1ubOuromaXpZonfL-eJ-KA7q-xSRiBBuSvxahzF-uFOY) supplies descriptions; source wins when they disagree.
 
+Extraction reads the cited Git commit, including multiline declarations, macro defaults, and variable arrays. Platform-specific defaults are shown separately for Windows, Linux, and macOS; values set at startup are identified instead of guessed. To correct the reference without advancing a reviewed revision or refreshing community prose, run `QSSM_REF=<commit> REFERENCE_NOTES_FILE=site/data/reference.json npm run extract`. If the sheet is unavailable, extraction retains the prepared reference notes.
+
 Source-checked corrections to reference prose live in `reference/overrides.json`. They override the sheet's summary and description during extraction, while names, defaults, and flags still come from the code. Record the reviewed commit and supporting source lines with each correction so it can be checked on the next content review.
 
 The search engine in `src/knowledge/` comes from [Nullius](https://github.com/timbergeron/Nullius): C chunking by function, symbol extraction, SQLite FTS5 search, and ranking weighted by source authority.
@@ -61,7 +63,11 @@ The repository no longer ships that timer. `deploy/refresh.sh` remains a manual 
 
 To use Pages as the front door and the server for Ask, set `askEndpoint` in `site/config.js` to the server URL and `ALLOWED_ORIGIN` to the Pages origin. Live Ask has a per-IP rate limit (`ASK_PER_IP_PER_10_MIN`, default 8) and a daily spend ceiling (`ASK_DAILY_BUDGET_USD`, default $1).
 
-`npm test` checks cross-origin API behavior and the source-retrieval regression suite without making any OpenRouter requests. Verify the production `/api/status` endpoint before publishing a changed `askEndpoint`.
+Ask stores spending in `data/ask-spend.sqlite` (`ASK_SPEND_PATH` can change the path). Keep that file across deployments and restarts; do not publish or overwrite it. Requests reserve a conservative amount before starting, atomically across processes, and refund unused budget when the provider reports actual cost. Interrupted requests with unknown cost retain their reservation. The daily window rolls over at midnight UTC; setting the daily budget to `0` disables paid requests. Provider routing enforces `ASK_MAX_PROMPT_PRICE_PER_MILLION` and `ASK_MAX_COMPLETION_PRICE_PER_MILLION` (defaults $1 and $2 per million tokens) and excludes per-request fees. These ceilings also determine each reservation; configure them when choosing a more expensive model.
+
+The running server reloads evidence when the FAQ, reference, source index, or knowledge manifest changes. Streamed answers are accepted only after successful completion; interrupted or token-limited responses show a retry message.
+
+`npm run check` checks every JavaScript file individually. `npm test` covers extraction, local search ranking, budget persistence/concurrency, evidence reloads, mocked answer streams, cross-origin API behavior, and source retrieval without making any OpenRouter requests. Verify the production `/api/status` endpoint before publishing a changed `askEndpoint`.
 
 ## Layout
 

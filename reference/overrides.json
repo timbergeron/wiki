@@ -1,4 +1,40 @@
 {
+  "cl_display_server_hostnames": {
+    "summary": "Shows cached server hostnames in place of numeric addresses; 0 keeps raw addresses.",
+    "description": "Enabled by default and saved to config. Uses the hostname cache to display a known hostname for a server IP address. When disabled or no matching cache entry is available, the numeric address remains visible.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/net_hostname_cache.c:46", "Quake/net_hostname_cache.c:773"]
+  },
+  "cl_wheel_order": {
+    "summary": "Sets weapon-wheel order using a space-separated list of weapon IDs.",
+    "description": "Saved to config. Supply weapon IDs in the order you want them on the weapon wheel, such as axe shotgun lg. Unknown IDs and duplicates are ignored. An empty value uses the wheel definition's default order; the built-in default also preserves the default order supplied by a custom wheel definition.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/cl_input.c:1036", "Quake/cl_input.c:1101", "Quake/cl_input.c:1659"]
+  },
+  "pr_engine": {
+    "summary": "Engine identification string, initialized from the compiled QSS-M version.",
+    "description": "Initialized from ENGINE_NAME_AND_VER in the source header. A normal QSS-M build combines the engine name with its compiled version; a build using QSS_DATE uses the QSS date string instead.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/host.c:103", "Quake/quakedef.h:61", "Quake/quakedef.h:67"]
+  },
+  "r_showhull": {
+    "summary": "Displays collision hulls for debugging; 0 disables the display.",
+    "description": "Use h0 for the point-collision boundary, h1 for the normal-player origin boundary, or h2 for the large-monster origin boundary. Optional ,diff and ,info suffixes provide comparison and diagnostic views. The default is 0.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/r_hulldebug.c:269", "Quake/r_hulldebug.c:2828"]
+  },
+  "snd_filterquality": {
+    "summary": "Sets sound resampling filter quality from 1 to 5; the default depends on the platform.",
+    "description": "Accepts values from 1 through 5. The compiled default is 5 on Windows and 1 on other platforms. A value outside this range is reset to the platform default. This variable is not saved to config.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/snd_dma.c:393", "Quake/snd_dma.c:508", "Quake/snd_mix.c:344"]
+  },
+  "sv_public": {
+    "summary": "Controls public server announcements; defaults to 1 for dedicated servers and 0 otherwise.",
+    "description": "The initial value is assigned at server startup: 1 for a dedicated server, 0 for a client/listen server. Setting it above 0 enables announcements to the configured master servers; 0 disables those announcements.",
+    "reviewedSha": "888ba6591605e94cf307c46a2c4f80e78f9a57c6",
+    "sources": ["Quake/net_dgrm.c:75", "Quake/sv_main.c:1973", "Quake/net_dgrm.c:3141"]
+  },
   "host_maxfps": {
     "summary": "Caps rendering FPS; 0 uncaps gameplay rendering. Negative values select a separate network/simulation rate.",
     "description": "Defaults to 250. Positive values cap rendering between 10 and 5000 FPS; 0 removes the gameplay cap. Vsync can still limit rendering, and the disconnected menu has its own cap. Negative values leave rendering uncapped and request a network/simulation interval between 10 and 150 Hz: for example, -72 requests 72 Hz. Zero and positive values above 72 use a 72 Hz interval. These are scheduling targets, not guarantees of a particular packet rate or lower latency.",

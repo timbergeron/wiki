@@ -8,6 +8,7 @@ import path from "node:path";
 import { indexPathFor } from "./knowledge/build.js";
 import { loadManifest } from "./knowledge/manifest.js";
 import { PackIndex } from "./knowledge/retriever.js";
+import { defaultLabel } from "../site/reference.js";
 
 const STOPWORDS = new Set(
   ("a an and are can change does for from get have how into its make my not off the " +
@@ -41,7 +42,7 @@ function scoreEntry(entry, question, terms) {
 export function formatEntry(entry) {
   const kind = { cvar: "console variable", command: "console command", param: "command-line option" }[entry.kind];
   const lines = [`${entry.name} — ${kind}`];
-  if (entry.kind === "cvar") lines.push(`default: "${entry.default}"${entry.flags.includes("saved") ? " (saved to config)" : ""}`);
+  if (entry.kind === "cvar") lines.push(`default: ${defaultLabel(entry)}${entry.flags.includes("saved") ? " (saved to config)" : ""}`);
   if (entry.origin) lines.push(`origin: ${entry.origin}`);
   const prose = entry.description || entry.summary;
   if (prose) lines.push(`notes: ${prose}`);

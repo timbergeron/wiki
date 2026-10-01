@@ -1,5 +1,6 @@
 node_modules/
 .env
 data/knowledge/
+data/ask-spend.sqlite*
 .DS_Store
 .claude/

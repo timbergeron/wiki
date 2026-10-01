@@ -1,3 +1,7 @@
+import { searchGuide, STOP, tokens } from "./search.js";
+import { defaultLabel, tryLine } from "./reference.js";
+import { readAnswerStream } from "./stream.js";
+
 const $ = (selector, root = document) => root.querySelector(selector);
 const el = (tag, props = {}, ...children) => {
   const node = Object.assign(document.createElement(tag), props);
@@ -122,56 +126,9 @@ function summaryOf(entry) {
   return text.replace(/\s+/g, " ").trim();
 }
 
-function tryLine(entry) {
-  if (entry.kind === "cvar") return `${entry.name} "${entry.default}"`;
-  return entry.name;
-}
-
 /* ---------------- search ---------------- */
-function tokens(text) {
-  return text.toLowerCase().match(/[+-]?[a-z0-9_]+/g) || [];
-}
-
-const STOP = new Set("a an the how do i to my is in of and or can what does it on for with where why you me".split(" "));
-
 function searchAll(query) {
-  const q = query.trim().toLowerCase();
-  if (!q) return [];
-  const words = tokens(q).filter((word) => !STOP.has(word) && word.length > 1);
-  const found = [];
-
-  for (const item of state.faq) {
-    const hay = `${item.question} ${item.answer} ${(item.related || []).join(" ")}`.toLowerCase();
-    const question = item.question.toLowerCase();
-    let score = 0;
-    for (const word of words) {
-      if (question.includes(word)) score += 4;
-      else if (hay.includes(word)) score += 1.5;
-    }
-    if (score && words.every((word) => hay.includes(word))) score *= 1.6;
-    if (score) found.push({ type: "faq", item, score });
-  }
-
-  for (const entry of state.reference.entries) {
-    const name = entry.name.toLowerCase();
-    const text = summaryOf(entry).toLowerCase();
-    let score = 0;
-    if (name === q) score = 100;
-    else if (name.startsWith(q)) score = 40 - Math.min(name.length - q.length, 20);
-    else if (name.includes(q)) score = 18;
-    for (const word of words) {
-      if (name === word) score += 20;
-      else if (name.includes(word)) score += 5;
-      if (text.includes(word)) score += 1.2;
-    }
-    if (words.length > 1 && words.every((word) => name.includes(word))) score += 30;
-    if (score) found.push({ type: "entry", item: entry, score });
-  }
-
-  found.sort((a, b) => b.score - a.score);
-  const faq = found.filter((r) => r.type === "faq").slice(0, 3);
-  const entries = found.filter((r) => r.type === "entry").slice(0, faq.length ? 4 : 6);
-  return [...faq, ...entries].sort((a, b) => b.score - a.score);
+  return searchGuide(query, { faq: state.faq, entries: state.reference.entries });
 }
 
 function highlight(text, query) {
@@ -209,7 +166,7 @@ function renderResults() {
       const entry = result.item;
       const letter = entry.kind === "cvar" ? "v" : entry.kind === "command" ? "c" : "−";
       button.innerHTML = `<span class="result-icon">${letter}</span>
-        <span><div class="result-title"><code>${highlight(entry.name, query)}</code>${entry.kind === "cvar" ? ` <span class="result-meta">= ${escapeHtml(entry.default)}</span>` : ""}</div>
+        <span><div class="result-title"><code>${highlight(entry.name, query)}</code>${entry.kind === "cvar" ? ` <span class="result-meta">= ${escapeHtml(defaultLabel(entry))}</span>` : ""}</div>
         <div class="result-sub">${escapeHtml(summaryOf(entry) || KIND_LABEL[entry.kind])}</div></span>
         <span class="result-meta">${KIND_LABEL[entry.kind]}</span>`;
     } else {
@@ -276,29 +233,14 @@ async function ask(question) {
       const error = await response.json().catch(() => ({}));
       throw new Error(error.error || "Live answers are unavailable right now.");
     }
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    for (;;) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-      let split;
-      while ((split = buffer.indexOf("\n\n")) >= 0) {
-        const frame = buffer.slice(0, split);
-        buffer = buffer.slice(split + 2);
-        const event = frame.match(/^event: (.*)$/m)?.[1];
-        const data = JSON.parse(frame.match(/^data: (.*)$/m)?.[1] || "null");
-        if (event === "sources") sources = data;
-        if (event === "delta") {
-          if (!text) status.remove();
-          text += data;
-          paint();
-        }
-        if (event === "fail") throw new Error(data.error);
-      }
-    }
-    if (!text.trim()) throw new Error("No answer came back. Try rephrasing.");
+    await readAnswerStream(response.body, {
+      onSources: (data) => { sources = data; },
+      onDelta: (data) => {
+        if (!text) status.remove();
+        text += data;
+        paint();
+      },
+    });
     body.classList.remove("cursor");
     // Keep only the sources the answer cited, in citation order.
     const used = [...new Set([...text.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])))].filter((n) => sources[n - 1]);
@@ -407,7 +349,7 @@ function refRow(entry) {
   button.setAttribute("aria-expanded", "false");
   button.innerHTML = `<span class="ref-name">${escapeHtml(entry.name)}</span>
     <span class="ref-sum${summary ? "" : " none"}">${escapeHtml(summary || "No description yet")}</span>
-    <span class="ref-tags">${entry.kind === "cvar" ? `<span class="pill" title="Default">${escapeHtml(entry.default === "" ? '""' : entry.default)}</span>` : ""}${entry.origin ? `<span class="${originClass(entry.origin)}">${escapeHtml(entry.origin)}</span>` : ""}</span>`;
+    <span class="ref-tags">${entry.kind === "cvar" ? `<span class="pill" title="${escapeHtml(defaultLabel(entry))}">${escapeHtml(defaultLabel(entry))}</span>` : ""}${entry.origin ? `<span class="${originClass(entry.origin)}">${escapeHtml(entry.origin)}</span>` : ""}</span>`;
   button.addEventListener("click", () => toggleRow(row, entry));
   row.append(button);
   return row;
@@ -427,7 +369,7 @@ function toggleRow(row, entry, force) {
   const facts = el("div", { className: "ref-facts" });
   facts.innerHTML = [
     `<span><b>Type</b> ${KIND_LABEL[entry.kind]}</span>`,
-    entry.kind === "cvar" ? `<span><b>Default</b> <code>${escapeHtml(entry.default === "" ? '""' : entry.default)}</code></span>` : "",
+    entry.kind === "cvar" ? `<span><b>Default</b> <code>${escapeHtml(defaultLabel(entry))}</code></span>` : "",
     entry.flags.includes("saved") ? "<span><b>Saved</b> to config.cfg</span>" : "",
     entry.flags.includes("serverinfo") ? "<span><b>Server</b> info</span>" : "",
     entry.origin ? `<span><b>From</b> ${escapeHtml(entry.origin)}</span>` : "",

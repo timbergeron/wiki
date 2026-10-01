@@ -8,10 +8,10 @@
   "version": "1.6.9"
  },
  "counts": {
-  "cvars": 536,
+  "cvars": 549,
   "commands": 324,
   "params": 66,
-  "described": 847
+  "described": 853
  },
  "entries": [
   {
@@ -1165,6 +1165,21 @@
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/discord.c#L612"
   },
   {
+   "name": "cl_display_server_hostnames",
+   "kind": "cvar",
+   "default": "1",
+   "flags": [
+    "saved"
+   ],
+   "file": "Quake/net_hostname_cache.c",
+   "line": 46,
+   "category": "Movement",
+   "origin": "",
+   "summary": "Shows cached server hostnames in place of numeric addresses; 0 keeps raw addresses.",
+   "description": "Enabled by default and saved to config. Uses the hostname cache to display a known hostname for a server IP address. When disabled or no matching cache entry is available, the numeric address remains visible.",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_hostname_cache.c#L46"
+  },
+  {
    "name": "cl_downloadbegin",
    "kind": "command",
    "flags": [
@@ -2138,6 +2153,21 @@
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_main.c#L109"
   },
   {
+   "name": "cl_wheel_order",
+   "kind": "cvar",
+   "default": "shotgun axe lg rl gl sng ng ssg prox laser mjolnir lavang lavasng multigl multirl plasma",
+   "flags": [
+    "saved"
+   ],
+   "file": "Quake/cl_input.c",
+   "line": 1101,
+   "category": "Movement",
+   "origin": "",
+   "summary": "Sets weapon-wheel order using a space-separated list of weapon IDs.",
+   "description": "Saved to config. Supply weapon IDs in the order you want them on the weapon wheel, such as axe shotgun lg. Unknown IDs and duplicates are ignored. An empty value uses the wheel definition's default order; the built-in default also preserves the default order supplied by a custom wheel definition.",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/cl_input.c#L1101"
+  },
+  {
    "name": "cl_yawspeed",
    "kind": "cvar",
    "default": "140",
@@ -2217,7 +2247,6 @@
    "kind": "cvar",
    "default": "",
    "flags": [
-    "serverinfo",
     "read-only"
    ],
    "file": "Quake/common.c",
@@ -6126,6 +6155,97 @@
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L150"
   },
   {
+   "name": "net_master1",
+   "kind": "cvar",
+   "default": "",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 84,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L84"
+  },
+  {
+   "name": "net_master2",
+   "kind": "cvar",
+   "default": "",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 85,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L85"
+  },
+  {
+   "name": "net_master3",
+   "kind": "cvar",
+   "default": "",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 86,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L86"
+  },
+  {
+   "name": "net_master4",
+   "kind": "cvar",
+   "default": "",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 87,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L87"
+  },
+  {
+   "name": "net_masterextra1",
+   "kind": "cvar",
+   "default": "master.frag-net.com:27950",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 88,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L88"
+  },
+  {
+   "name": "net_masterextra2",
+   "kind": "cvar",
+   "default": "dpmaster.deathmask.net:27950",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 89,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L89"
+  },
+  {
+   "name": "net_masterextra3",
+   "kind": "cvar",
+   "default": "master.quakeone.com:27950",
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 90,
+   "category": "Network",
+   "origin": "",
+   "summary": "",
+   "description": "",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L90"
+  },
+  {
    "name": "net_messagetimeout",
    "kind": "cvar",
    "default": "300",
@@ -7076,6 +7196,19 @@
    "summary": "",
    "description": "Writes out a qsextensions.qc file. id1/src folder needs to exist",
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/pr_edict.c#L2144"
+  },
+  {
+   "name": "pr_engine",
+   "kind": "cvar",
+   "default": "QSS-M 1.6.9",
+   "flags": [],
+   "file": "Quake/host.c",
+   "line": 103,
+   "category": "Server",
+   "origin": "",
+   "summary": "Engine identification string, initialized from the compiled QSS-M version.",
+   "description": "Initialized from ENGINE_NAME_AND_VER in the source header. A normal QSS-M build combines the engine name with its compiled version; a build using QSS_DATE uses the QSS date string instead.",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/host.c#L103"
   },
   {
    "name": "precache",
@@ -8090,15 +8223,20 @@
   {
    "name": "r_part_vbo",
    "kind": "cvar",
-   "default": "0",
+   "default": "1",
    "flags": [],
    "file": "Quake/r_part_fte.c",
-   "line": 486,
+   "line": 488,
+   "defaultByPlatform": {
+    "linux": "1",
+    "windows": "1",
+    "macos": "0"
+   },
    "category": "Graphics",
    "origin": "QSS-M",
    "summary": "",
    "description": "Enables streaming particle geometry through OpenGL vertex buffers. It defaults to 1 on most platforms but 0 on Apple, where synchronous buffer updates can be slower than client arrays.",
-   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/r_part_fte.c#L486"
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/r_part_fte.c#L488"
   },
   {
    "name": "r_particle_tracelimit",
@@ -8395,6 +8533,19 @@
    "summary": "",
    "description": "r_showfields displays a debug overlay for the server entity closest to the crosshair, including its classname, relevant fields, and linked targets. Set r_showfields 1 to show the full field panel in the bottom-right corner, or r_showfields 2 to anchor that panel near the focused entity in the world. Typical examples are r_showfields 1 for stable inspection while testing a map, r_showfields 2 for in-world debugging of triggers and targets, and r_showfields 0 to turn the overlay off.",
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/gl_rmain.c#L130"
+  },
+  {
+   "name": "r_showhull",
+   "kind": "cvar",
+   "default": "0",
+   "flags": [],
+   "file": "Quake/r_hulldebug.c",
+   "line": 269,
+   "category": "Graphics",
+   "origin": "",
+   "summary": "Displays collision hulls for debugging; 0 disables the display.",
+   "description": "Use h0 for the point-collision boundary, h1 for the normal-player origin boundary, or h2 for the large-monster origin boundary. Optional ,diff and ,info suffixes provide comparison and diagnostic views. The default is 0.",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/r_hulldebug.c#L269"
   },
   {
    "name": "r_showlocs",
@@ -10291,6 +10442,24 @@
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_main.c#L1618"
   },
   {
+   "name": "snd_filterquality",
+   "kind": "cvar",
+   "default": "1",
+   "flags": [],
+   "file": "Quake/snd_dma.c",
+   "line": 399,
+   "defaultByPlatform": {
+    "linux": "1",
+    "windows": "5",
+    "macos": "1"
+   },
+   "category": "Sound",
+   "origin": "",
+   "summary": "Sets sound resampling filter quality from 1 to 5; the default depends on the platform.",
+   "description": "Accepts values from 1 through 5. The compiled default is 5 on Windows and 1 on other platforms. A value outside this range is reset to the platform default. This variable is not saved to config.",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/snd_dma.c#L399"
+  },
+  {
    "name": "snd_mixspeed",
    "kind": "cvar",
    "default": "44100",
@@ -11079,6 +11248,20 @@
    "summary": "",
    "description": "Sets the network protocol used by the server. Default is 666. Possible values are 15 (standard netquake protocol) or 666 (new fitzquake protocol.) Changes to the protocol will not take effect until the next time you load/reload a level. When running protocol 666, standard clients won't be able to connect to your server, and they won't be able to play any demos you record. When running protocol 15, only 256 models and 256 sounds can be sent to the client, which means you would see invisible entities and not hear some sounds, when running a map or mod that has more than 256 models or sounds. There is also some other data the server will suppress in protocol 15, such as per-entity alpha. Also note, dzip's special demo compression does not work on demos that use modified protocols, so you will get a compression ratio no better than standard zip compression. QSS: Added 10002 (NEHAHRABJP3). Protocol may be prefixed with FTE+ or Base- to enable/disable FTE extensions",
    "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/sv_main.c#L1986"
+  },
+  {
+   "name": "sv_public",
+   "kind": "cvar",
+   "default": null,
+   "flags": [],
+   "file": "Quake/net_dgrm.c",
+   "line": 75,
+   "defaultExpression": "NULL",
+   "category": "Server",
+   "origin": "",
+   "summary": "Controls public server announcements; defaults to 1 for dedicated servers and 0 otherwise.",
+   "description": "The initial value is assigned at server startup: 1 for a dedicated server, 0 for a client/listen server. Setting it above 0 enables announcements to the configured master servers; 0 disables those announcements.",
+   "url": "https://github.com/timbergeron/QSS-M/blob/888ba6591/Quake/net_dgrm.c#L75"
   },
   {
    "name": "sv_pushcache",
