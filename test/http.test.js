@@ -11,7 +11,7 @@ async function fixture(t) {
   await writeFile(`${root}/site/index.html`, "first");
   const questions = [];
   const server = createWikiServer({ root, env: { OPENROUTER_API_KEY: "mock", ALLOWED_ORIGIN: "https://qssm.quakeone.com" },
-    openEvidence: async () => ({ gather(question) { questions.push(question); return []; }, close() {} }),
+    openEvidence: async () => ({ acceptsQuestion: () => true, gather(question) { questions.push(question); return []; }, close() {} }),
     fetchImpl: async () => new Response('data: {"choices":[{"delta":{"content":"Test answer."},"finish_reason":"stop"}],"usage":{"cost":0}}\n\ndata: [DONE]\n\n'),
   });
   server.listen(0, "127.0.0.1");

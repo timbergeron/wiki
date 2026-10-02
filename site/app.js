@@ -235,7 +235,7 @@ async function ask(question) {
     });
     if (!response.ok) {
       const error = await response.json().catch(() => ({}));
-      throw new Error(error.error || "Live answers are unavailable right now.");
+      throw Object.assign(new Error(error.error || "Live answers are unavailable right now."), { code: error.code });
     }
     await readAnswerStream(response.body, {
       onSources: (data) => { sources = data; },
@@ -259,7 +259,7 @@ async function ask(question) {
     body.classList.remove("cursor");
     status.remove();
     body.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
-    const matches = searchAll(question).slice(0, 4);
+    const matches = error.code === "off_topic" ? [] : searchAll(question).slice(0, 4);
     if (matches.length) {
       body.insertAdjacentHTML("beforeend", "<p>These might help:</p>");
       const list = el("ul");

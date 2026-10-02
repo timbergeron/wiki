@@ -106,12 +106,14 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
     if (question.length < 3 || question.length > 300) {
       return sendJson(response, 400, { error: "Questions should be between 3 and 300 characters." });
     }
+    const found = await evidence.get();
+    if (abort.signal.aborted) return;
+    if (!found.acceptsQuestion(question)) {
+      return sendJson(response, 422, { code: "off_topic", error: "Please ask a question about QSS-M, its settings, or playing Quake." });
+    }
     const ip = clientIp(request);
     const refusal = allow(ip);
     if (refusal) return sendJson(response, 429, { error: refusal });
-
-    const found = await evidence.get();
-    if (abort.signal.aborted) return;
     const sources = found.gather(question);
     const messages = answerMessages(question, sources);
     const maxTokens = 4096;

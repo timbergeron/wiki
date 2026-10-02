@@ -16,7 +16,7 @@ async function fixture(t, options = {}) {
   const root = await mkdtemp("/tmp/qssm-wiki-ask-");
   const servers = [];
   const open = async (fetchImpl, env = {}) => {
-    const server = createWikiServer({ root, env: { OPENROUTER_API_KEY: "fake-key", ASK_DAILY_BUDGET_USD: String(options.limit ?? 1), ...env }, fetchImpl, openEvidence: async () => ({ gather: () => [], close() {} }) });
+    const server = createWikiServer({ root, env: { OPENROUTER_API_KEY: "fake-key", ASK_DAILY_BUDGET_USD: String(options.limit ?? 1), ...env }, fetchImpl, openEvidence: async () => ({ acceptsQuestion: () => true, gather: () => [], close() {} }) });
     servers.push(server);
     server.listen(0, "127.0.0.1");
     await once(server, "listening");

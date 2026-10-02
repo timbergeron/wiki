@@ -9,6 +9,7 @@ import { indexPathFor } from "./knowledge/build.js";
 import { loadManifest } from "./knowledge/manifest.js";
 import { PackIndex } from "./knowledge/retriever.js";
 import { defaultLabel } from "../site/reference.js";
+import { createQuestionClassifier } from "./question-scope.js";
 
 const STOPWORDS = new Set(
   ("a an and are can change does for from get have how into its make my not off the " +
@@ -113,6 +114,9 @@ export async function openEvidence(root) {
   return {
     reference,
     byName,
+    acceptsQuestion: createQuestionClassifier({ entries: reference.entries, faq: reviewedAnswers,
+      hasSourceSymbol: (name) => Boolean(index?.hasSymbol(name)),
+    }),
     gather,
     close: () => index?.close(),
   };
