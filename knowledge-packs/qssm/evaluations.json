@@ -146,6 +146,14 @@
     {
       "question": "How does QSS-M download missing maps?",
       "expect": { "locator": "Quake/cl_main.c" }
+    },
+    {
+      "question": "Where is the QSS-M crosshair menu implemented?",
+      "expect": { "locator": "Quake/menu.c", "kind": "source", "text": "M_Crosshair" }
+    },
+    {
+      "question": "Where is M_Menu_ResetConfig_f defined?",
+      "expect": { "locator": "Quake/menu.c", "kind": "source", "text": "M_Menu_ResetConfig_f" }
     }
   ],
   "offTopic": [

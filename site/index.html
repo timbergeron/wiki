@@ -10,9 +10,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script src="config.js"></script>
-  <script type="module" src="app.js?v=3"></script>
+  <script type="module" src="app.js?v=4"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -47,12 +47,12 @@
 
         <form class="search" id="search-form" role="search" autocomplete="off">
           <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="q" type="search" name="q" placeholder="How do I change my crosshair?" aria-label="Search the guide or ask a question" spellcheck="false" maxlength="300">
+          <input id="q" type="search" name="q" role="combobox" aria-autocomplete="list" aria-controls="results" aria-expanded="false" placeholder="How do I change my crosshair?" aria-label="Search the guide or ask a question" spellcheck="false" maxlength="300">
           <button type="submit" id="ask-button" class="ask-button">Search</button>
         </form>
 
         <div class="suggestions" id="suggestions" aria-label="Popular questions"></div>
-        <div class="results" id="results" aria-live="polite" hidden></div>
+        <div class="results" id="results" role="listbox" aria-label="Search results" aria-live="polite" hidden></div>
       </div>
     </section>
 
@@ -75,10 +75,10 @@
         <p class="section-sub" id="console-sub">Every variable and command the engine registers.</p>
       </div>
       <div class="ref-controls">
-        <div class="segmented" id="kind-filter" role="tablist" aria-label="Show">
-          <button type="button" role="tab" data-kind="all" aria-selected="true">All</button>
-          <button type="button" role="tab" data-kind="cvar" aria-selected="false">Variables</button>
-          <button type="button" role="tab" data-kind="command" aria-selected="false">Commands</button>
+        <div class="segmented" id="kind-filter" role="group" aria-label="Show">
+          <button type="button" data-kind="all" aria-pressed="true">All</button>
+          <button type="button" data-kind="cvar" aria-pressed="false">Variables</button>
+          <button type="button" data-kind="command" aria-pressed="false">Commands</button>
         </div>
         <label class="filter">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>

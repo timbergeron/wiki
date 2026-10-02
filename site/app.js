@@ -1,4 +1,5 @@
-import { searchGuide, STOP, tokens } from "./search.js";
+import { searchGuide, tokens } from "./search.js";
+import { escapeHtml, highlight } from "./highlight.js";
 import { defaultLabel, tryLine } from "./reference.js";
 import { readAnswerStream } from "./stream.js";
 
@@ -8,7 +9,6 @@ const el = (tag, props = {}, ...children) => {
   for (const child of children.flat()) if (child != null && child !== false) node.append(child);
   return node;
 };
-const escapeHtml = (text) => String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 const ICON = {
   chev: '<svg viewBox="0 0 12 12"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>',
@@ -51,7 +51,7 @@ function inline(text, citations) {
     const code = codes[Number(index)];
     const name = code.trim().split(/\s+/)[0].replace(/^"|"$/g, "").toLowerCase();
     return state.byName.has(name)
-      ? `<code class="linked" data-ref="${escapeHtml(name)}" title="Open in console reference">${code}</code>`
+      ? `<a href="#ref/${encodeURIComponent(name)}" class="ref-link" title="Open in console reference"><code class="linked" data-ref="${escapeHtml(name)}">${code}</code></a>`
       : `<code>${code}</code>`;
   });
 }
@@ -131,13 +131,11 @@ function searchAll(query) {
   return searchGuide(query, { faq: state.faq, entries: state.reference.entries });
 }
 
-function highlight(text, query) {
-  const words = tokens(query).filter((word) => word.length > 1 && !STOP.has(word));
-  let html = escapeHtml(text);
-  for (const word of words) {
-    html = html.replace(new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "ig"), "<mark>$1</mark>");
-  }
-  return html;
+function hideResults() {
+  $("#results").hidden = true;
+  $("#q").setAttribute("aria-expanded", "false");
+  $("#q").removeAttribute("aria-activedescendant");
+  state.selection = -1;
 }
 
 function renderResults() {
@@ -147,13 +145,13 @@ function renderResults() {
   state.items = matches.map((match) => ({ ...match }));
   const askable = state.ask && query.trim().length >= 3;
   if (askable) state.items.push({ type: "ask" });
-  if (!query.trim() || !state.items.length) {
-    panel.hidden = true;
-    state.selection = -1;
+  if (!query.trim()) {
+    hideResults();
     return;
   }
+  if (state.selection >= state.items.length) state.selection = -1;
   panel.replaceChildren(...state.items.map((result, index) => {
-    const button = el("button", { type: "button", className: "result", role: "option" });
+    const button = el("button", { type: "button", className: "result", role: "option", id: `result-${index}`, tabIndex: -1 });
     button.setAttribute("aria-selected", String(index === state.selection));
     button.addEventListener("mousedown", (event) => event.preventDefault());
     button.addEventListener("click", () => choose(index));
@@ -178,12 +176,18 @@ function renderResults() {
     return button;
   }));
   panel.hidden = false;
+  if (!state.items.length) panel.append(el("div", { className: "ref-empty", textContent: "No matches. Try a setting name or a shorter question." }));
+  $("#q").setAttribute("aria-expanded", "true");
+  if (state.selection >= 0) {
+    $("#q").setAttribute("aria-activedescendant", `result-${state.selection}`);
+    document.getElementById(`result-${state.selection}`).scrollIntoView({ block: "nearest" });
+  } else $("#q").removeAttribute("aria-activedescendant");
 }
 
 function choose(index) {
   const result = state.items[index];
   if (!result) return;
-  $("#results").hidden = true;
+  hideResults();
   if (result.type === "faq") openFaq(result.item.id);
   else if (result.type === "entry") openEntry(result.item.name);
   else ask($("#q").value.trim());
@@ -196,13 +200,13 @@ async function ask(question) {
   if (!question) return;
   if (!state.ask) {
     const [top] = searchAll(question);
-    if (top) return choose(0);
+    if (top) return top.type === "faq" ? openFaq(top.item.id) : openEntry(top.item.name);
     return toast("Try a setting name, like fov or crosshair");
   }
   activeAsk?.abort();
   const controller = new AbortController();
   activeAsk = controller;
-  $("#results").hidden = true;
+  hideResults();
 
   const wrap = $("#answer");
   const body = el("div", { className: "prose cursor" });
@@ -430,7 +434,7 @@ function openEntry(name) {
     state.refQuery = entry.name;
     state.refLimit = 60;
     $("#ref-q").value = entry.name;
-    for (const button of $("#kind-filter").children) button.setAttribute("aria-selected", String(button.dataset.kind === "all"));
+    for (const button of $("#kind-filter").children) button.setAttribute("aria-pressed", String(button.dataset.kind === "all"));
     renderCategories();
     renderReference();
     row = document.getElementById(`ref/${entry.name}`);
@@ -483,16 +487,16 @@ function wire() {
   const input = $("#q");
   input.addEventListener("input", () => { state.selection = -1; renderResults(); });
   input.addEventListener("focus", renderResults);
-  input.addEventListener("blur", () => setTimeout(() => { $("#results").hidden = true; }, 120));
+  input.addEventListener("blur", hideResults);
   input.addEventListener("keydown", (event) => {
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       const count = state.items.length;
       if (!count) return;
-      state.selection = (state.selection + (event.key === "ArrowDown" ? 1 : -1) + count) % count;
+      state.selection = state.selection < 0 ? (event.key === "ArrowDown" ? 0 : count - 1) : (state.selection + (event.key === "ArrowDown" ? 1 : -1) + count) % count;
       renderResults();
     } else if (event.key === "Escape") {
-      $("#results").hidden = true;
+      hideResults();
       input.blur();
     }
   });
@@ -526,7 +530,7 @@ function wire() {
     if (!button) return;
     state.kind = button.dataset.kind;
     state.refLimit = 60;
-    for (const other of $("#kind-filter").children) other.setAttribute("aria-selected", String(other === button));
+    for (const other of $("#kind-filter").children) other.setAttribute("aria-pressed", String(other === button));
     renderReference();
   });
   let timer;
@@ -537,8 +541,11 @@ function wire() {
   $("#ref-more").addEventListener("click", () => { state.refLimit += 120; renderReference(); });
 
   document.addEventListener("click", (event) => {
-    const code = event.target.closest("code.linked");
-    if (code) openEntry(code.dataset.ref);
+    const link = event.target.closest("a.ref-link");
+    if (link && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      openEntry(link.querySelector("code").dataset.ref);
+    }
   });
 
   const bar = $("#bar");
@@ -562,7 +569,8 @@ function wire() {
   document.querySelectorAll(".section, .faq-group").forEach((node) => spy.observe(node));
 
   const route = () => {
-    const hash = decodeURIComponent(location.hash.slice(1));
+    let hash;
+    try { hash = decodeURIComponent(location.hash.slice(1)); } catch { return; }
     if (hash.startsWith("faq/")) openFaq(hash.slice(4));
     else if (hash.startsWith("ref/")) openEntry(hash.slice(4));
   };
@@ -574,7 +582,10 @@ async function main() {
   const load = (file) => fetch(`data/${file}`, { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
   const [reference, faq] = await Promise.all([load("reference.json"), load("faq.json")]);
   if (!reference) {
-    $("#version-line").textContent = "The reference hasn't been built yet — run npm run extract.";
+    $("#version-line").textContent = "The guide couldn't load. Check your connection and try again.";
+    $("#suggestions").replaceChildren(el("button", { type: "button", className: "suggestion", textContent: "Retry", onclick: () => location.reload() }));
+    $("#q").disabled = true;
+    $("#ask-button").disabled = true;
     return;
   }
   state.reference = reference;
@@ -589,9 +600,10 @@ async function main() {
   renderTimeline();
   wire();
 
-  fetch(`${state.askBase}/api/status`).then((r) => (r.ok ? r.json() : null)).then((status) => {
+  fetch(`${state.askBase}/api/status`, { signal: AbortSignal.timeout(10_000) }).then((r) => (r.ok ? r.json() : null)).then((status) => {
     state.ask = Boolean(status?.ask);
     if (state.ask) $("#ask-button").textContent = "Ask";
+    if (document.activeElement === $("#q")) renderResults();
   }).catch(() => {});
 }
 

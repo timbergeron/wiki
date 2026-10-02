@@ -6,6 +6,7 @@ import { stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { pipeline } from "node:stream/promises";
 import { answerMessages } from "./evidence.js";
 import { EvidenceCache } from "./evidence-cache.js";
 import { SpendLedger, reservationCost } from "./ask-budget.js";
@@ -67,11 +68,11 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
   }
 
   function cors(request, response) {
+    if (config.allowedOrigin) response.setHeader("Vary", "Origin");
     if (config.allowedOrigin && request.headers.origin === config.allowedOrigin) {
       response.setHeader("Access-Control-Allow-Origin", config.allowedOrigin);
       response.setHeader("Access-Control-Allow-Headers", "Content-Type");
       response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-      response.setHeader("Vary", "Origin");
     }
   }
 
@@ -81,12 +82,14 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
   }
 
   async function readBody(request, limit = 4096) {
-    let body = "";
-    for await (const chunk of request) {
-      body += chunk;
-      if (body.length > limit) throw new Error("too large");
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of request.iterator({ destroyOnReturn: false })) {
+      size += chunk.length;
+      if (size > limit) { request.resume(); throw new Error("too large"); }
+      chunks.push(chunk);
     }
-    return JSON.parse(body || "{}");
+    return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}");
   }
 
   async function ask(request, response) {
@@ -94,7 +97,9 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
     response.once("close", () => abort.abort());
     let question = "";
     try {
-      question = String((await readBody(request)).question || "").replace(/\s+/g, " ").trim();
+      const body = await readBody(request);
+      if (typeof body?.question !== "string") throw new Error("not a question");
+      question = body.question.replace(/\s+/g, " ").trim();
     } catch {
       return sendJson(response, 400, { error: "Send JSON with a question." });
     }
@@ -164,7 +169,9 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
 
   async function serveStatic(request, response) {
     const url = new URL(request.url, "http://local");
-    let relative = decodeURIComponent(url.pathname);
+    let relative;
+    try { relative = decodeURIComponent(url.pathname); } catch { return sendJson(response, 400, { error: "Invalid URL." }); }
+    if (relative.includes("\0")) return sendJson(response, 400, { error: "Invalid URL." });
     if (relative.endsWith("/")) relative += "index.html";
     const file = path.join(siteDir, path.normalize(relative));
     if (!file.startsWith(siteDir + path.sep)) return sendJson(response, 404, { error: "Not found" });
@@ -177,11 +184,14 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
     }
     const type = TYPES[path.extname(file)] || "application/octet-stream";
     const modified = new Date(Math.floor(info.mtimeMs / 1000) * 1000).toUTCString();
-    const headers = { "Cache-Control": "no-cache", "Last-Modified": modified, "X-Content-Type-Options": "nosniff" };
-    if (request.headers["if-modified-since"] === modified) return response.writeHead(304, headers).end();
+    const etag = `W/"${info.size}-${info.mtimeMs}-${info.ctimeMs}"`;
+    const headers = { "Cache-Control": "no-cache", "Last-Modified": modified, ETag: etag, "X-Content-Type-Options": "nosniff" };
+    // ETags distinguish updates within the same second, which HTTP dates cannot.
+    const matches = request.headers["if-none-match"]?.split(",").map((tag) => tag.trim());
+    if (matches ? matches.includes(etag) || matches.includes("*") : request.headers["if-modified-since"] === modified) return response.writeHead(304, headers).end();
     response.writeHead(200, { ...headers, "Content-Type": type, "Content-Length": info.size });
     if (request.method === "HEAD") return response.end();
-    createReadStream(file).pipe(response);
+    await pipeline(createReadStream(file), response);
   }
 
   const server = createServer(async (request, response) => {

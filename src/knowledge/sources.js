@@ -11,7 +11,8 @@ import { compileGlobs } from "./glob.js";
 import { resolveContainedPath, resolveSourcePath } from "./manifest.js";
 
 const run = promisify(execFile);
-const MAX_FILE_BYTES = 512 * 1024;
+// QSS-M's menu.c is larger than 1 MiB and contains most menu behavior.
+const MAX_FILE_BYTES = 2 * 1024 * 1024;
 const MAX_FILES = 5000;
 const MAX_DOWNLOAD_BYTES = 8 * 1024 * 1024;
 const MAX_SOURCE_BYTES = 64 * 1024 * 1024;
@@ -56,14 +57,19 @@ async function readTextFile(absolutePath) {
   return buffer.toString("utf8");
 }
 
-async function chunkFiles(source, { root, relativePaths, revision, logger }) {
+async function chunkFiles(source, { root, relativePaths, revision, logger, readCommitted, pathPrefix = "" }) {
   const documents = [];
   let sourceBytes = 0;
   for (const relativePath of relativePaths) {
     let text = "";
     try {
-      const safePath = await resolveContainedPath(root, relativePath, `${source.id}:${relativePath}`);
-      text = await readTextFile(safePath);
+      if (readCommitted) {
+        text = await readCommitted(relativePath);
+        if (Buffer.byteLength(text) > MAX_FILE_BYTES || text.includes("\0")) text = "";
+      } else {
+        const safePath = await resolveContainedPath(root, relativePath, `${source.id}:${relativePath}`);
+        text = await readTextFile(safePath);
+      }
     } catch (error) {
       logger?.warn?.(`Skipped ${relativePath}: ${error.message}`);
       continue;
@@ -91,7 +97,7 @@ async function chunkFiles(source, { root, relativePaths, revision, logger }) {
       locator: relativePath,
       title: relativePath,
       revision,
-      url: documentUrl(source, { relativePath, revision, startLine: 1 }),
+      url: documentUrl(source, { relativePath: pathPrefix + relativePath, revision, startLine: 1 }),
       chunks,
     });
   }
@@ -100,8 +106,11 @@ async function chunkFiles(source, { root, relativePaths, revision, logger }) {
 
 async function collectGitWorktree(source, context) {
   const root = await resolveSourcePath(source, context);
-  const revision = await repositoryRevision(root, source.ref || "HEAD", { includeDirty: true });
-  const listing = await git(root, ["ls-files", "-z"]);
+  // Resolve once, then read that tree rather than labeling dirty working files
+  // with a commit whose source links contain different code.
+  const revision = (await git(root, ["rev-parse", "--verify", `${source.ref || "HEAD"}^{commit}`])).trim();
+  const pathPrefix = (await git(root, ["rev-parse", "--show-prefix"])).replace(/\r?\n$/, "");
+  const listing = await git(root, ["ls-tree", "-r", "--name-only", "-z", revision]);
   const include = compileGlobs(source.include);
   const exclude = source.exclude.length ? compileGlobs(source.exclude) : () => false;
 
@@ -113,7 +122,9 @@ async function collectGitWorktree(source, context) {
 
   return {
     revision,
-    documents: await chunkFiles(source, { ...context, root, relativePaths, revision }),
+    documents: await chunkFiles(source, { ...context, root, relativePaths, revision, pathPrefix,
+      readCommitted: (relativePath) => git(root, ["show", `${revision}:${pathPrefix}${relativePath}`]),
+    }),
   };
 }
 

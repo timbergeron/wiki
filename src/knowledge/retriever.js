@@ -266,6 +266,18 @@ export class PackIndex {
         const named = tokens.some(
           (token) => token.lower.length > 3 && item.chunk.locator.toLowerCase().includes(token.lower),
         );
+        // Adjacent topic terms such as "command buffer" are more specific than
+        // isolated occurrences of "command" or "buffer".
+        const body = item.chunk.body.toLowerCase();
+        const topic = this.selectiveTokens(tokens);
+        const phrase = topic.some((token, position) => position > 0 &&
+          body.includes(`${topic[position - 1].lower} ${token.lower}`)) ? 1.5 : 1;
+        // Menu drawing and event handlers mention many subsystems. For a
+        // question about engine behavior, prefer its implementation; keep menu
+        // code at full weight for UI questions and explicit symbol lookups.
+        const uiIntent = /\b(menu\w*|ui|hud|options?|interface)\b/i.test(question);
+        const presentation = /(?:^|\/)menu\.[ch]$/.test(item.chunk.locator) && !uiIntent &&
+          !item.reasons.some((reason) => !reason.endsWith("match")) ? 0.8 : 1;
         const located = locationIntent && item.chunk.kind === "source" ? 1.35 : 1;
         const exact = item.reasons.some((reason) => !reason.endsWith("match")) ? 1.35 : 1;
         const historical = historyIntent
@@ -275,7 +287,7 @@ export class PackIndex {
           : 1;
         return {
           ...item,
-          score: item.score * authority * spread * located * exact * historical * (named ? 1.2 : 1),
+          score: item.score * authority * spread * located * exact * historical * (named ? 1.2 : 1) * phrase * presentation,
         };
       })
       .sort((left, right) => right.score - left.score);

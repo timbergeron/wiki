@@ -27,7 +27,7 @@ Extraction reads the cited Git commit, including multiline declarations, macro d
 
 Source-checked corrections to reference prose live in `reference/overrides.json`. They override the sheet's summary and description during extraction, while names, defaults, and flags still come from the code. Record the reviewed commit and supporting source lines with each correction so it can be checked on the next content review.
 
-The search engine in `src/knowledge/` comes from [Nullius](https://github.com/timbergeron/Nullius): C chunking by function, symbol extraction, SQLite FTS5 search, and ranking weighted by source authority.
+The search engine in `src/knowledge/` comes from [Nullius](https://github.com/timbergeron/Nullius): C chunking by function, symbol extraction, SQLite FTS5 search, and ranking weighted by source authority. Source and documentation indexing reads the configured Git revision, including large menu files, so uncommitted engine edits cannot be mistaken for cited code. When rebuilding a previously reviewed revision, point `KNOWLEDGE_SOURCE_QSSM` at a checkout of that commit and use the same commit for `QSSM_REF` during extraction.
 
 ```bash
 npm run knowledge -- query qssm "what does r_skywind do?"
