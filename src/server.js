@@ -25,7 +25,7 @@ export function createWikiServer({ root = defaultRoot, env = process.env, fetchI
 
   const config = {
     apiKey: env.OPENROUTER_API_KEY?.trim() || "",
-    model: env.OPENROUTER_MODEL?.trim() || "deepseek/deepseek-v4.1-flash",
+    model: env.OPENROUTER_MODEL?.trim() || "anthropic/claude-haiku-5.5",
     publicUrl: env.PUBLIC_URL?.trim() || "http://localhost:3012",
     allowedOrigin: env.ALLOWED_ORIGIN?.trim() || "",
     trustProxy: env.TRUST_PROXY === "1",

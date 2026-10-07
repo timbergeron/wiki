@@ -2,10 +2,10 @@
 
 Live at **https://qssm.quakeone.com/wiki/**
 
-A FAQ and console reference for the [QSS-M](https://github.com/timbergeron/QSS-M) Quake engine. The main wiki is maintained and rebuilt in this local Codex workspace. **OpenRouter/DeepSeek is used only for visitor search/Ask answers.**
+A FAQ and console reference for the [QSS-M](https://github.com/timbergeron/QSS-M) Quake engine. The main wiki is maintained and rebuilt in this local Codex workspace. **OpenRouter/Claude Haiku is used only for visitor search/Ask answers.**
 
 - **Search** across console variables, commands, launch options, and FAQ content, with instant local results.
-- **Ask** streams a source-grounded answer through OpenRouter/DeepSeek.
+- **Ask** streams a source-grounded answer through OpenRouter/Claude Haiku.
 - **FAQ** answers are maintained here in `site/data/faq.json`, using QSS-M source evidence.
 - **Console reference** lists variables, commands, and launch options extracted from source, with community descriptions and links to their definitions.
 
@@ -42,7 +42,7 @@ Set `OPENROUTER_API_KEY` only to enable live Ask. Without a key, the published F
 
 Live Ask needs a server to hold the API key and a source search index. `deploy/` includes a systemd service on port 3012 and nginx configuration. Prepare and deploy the search index and matching reference data when updating the Ask server; configure its knowledge source paths for that host.
 
-The production endpoint is `https://timbergeron.com/qssm-wiki`, hosted on the existing server at `woods@timbergeron.com`. Its environment file is `/home/woods/codedev/qssm-wiki/.env` (mode 600). It uses `deepseek/deepseek-v4.1-flash`, allows browser requests from `https://qssm.quakeone.com`, and listens on loopback behind nginx. Never put its API key in `site/` or Git.
+The production endpoint is `https://timbergeron.com/qssm-wiki`, hosted on the existing server at `woods@timbergeron.com`. Its environment file is `/home/woods/codedev/qssm-wiki/.env` (mode 600). It uses `anthropic/claude-haiku-5.5`, allows browser requests from `https://qssm.quakeone.com`, and listens on loopback behind nginx. Never put its API key in `site/` or Git.
 
 Upload prepared files and the local index from this workspace:
 

@@ -73,3 +73,19 @@ test("a zero daily budget prevents any upstream request", async (t) => {
   const server = await open(async () => assert.fail("a disabled budget must not call OpenRouter"));
   assert.equal((await post(server.base)).status, 429);
 });
+
+test("Ask defaults to Haiku 5.5 and honors an explicit model override", async (t) => {
+  const { open } = await fixture(t);
+  for (const [env, expected] of [[{}, "anthropic/claude-haiku-5.5"], [{ OPENROUTER_MODEL: "provider/custom-model" }, "provider/custom-model"]]) {
+    const server = await open(async (_url, options) => {
+      const body = JSON.parse(options.body);
+      assert.equal(body.model, expected);
+      assert.deepEqual(body.provider.max_price, { prompt: 1, completion: 2, request: 0 });
+      return stream();
+    }, env);
+    const status = await (await fetch(`${server.base}/api/status`)).json();
+    assert.equal(status.model, expected);
+    assert.match(await (await post(server.base)).text(), /event: done/);
+    await server.close();
+  }
+});
